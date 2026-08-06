@@ -1,8 +1,1 @@
-telethon
-asyncio
-pillow
-googletrans==4.0.0-rc1
-gTTS
-requests
-psutil
-flask
+python-telegram-bot==20.7
