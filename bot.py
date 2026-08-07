@@ -1247,6 +1247,7 @@ def main():
     application = Application.builder().token(BOT_TOKEN).build()
     
     # دستورات عمومی
+    application.add_handler(CallBackQueryHandler(lucky_callback, pattern=r'^lucky_'))
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
     
