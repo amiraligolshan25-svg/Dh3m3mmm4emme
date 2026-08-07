@@ -476,7 +476,7 @@ async def clear_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         message_id = update.message.message_id
-        message_ids = list(range(message_id - count, message_id)
+        message_ids = list(range(message_id - count, message_id))
 
         await update.effective_chat.delete_messages(message_ids)
 
