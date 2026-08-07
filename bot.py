@@ -78,5 +78,5 @@ async def demote_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     application = (Application.builder().token(TOKEN).build())
-    application.add_handler(MessageHandler(filters.Regex(r'^افزودن ادمین\s+\d+$'), promote_cmd))
+    application.add_handler(MessageHandler(filters.Regex(r'افزودن ادمین'), promote_cmd))
     application.add_handler(MessageHandler(filters.Regex(r'^حذف ادمین\s+\d+$'), demote_cmd))
