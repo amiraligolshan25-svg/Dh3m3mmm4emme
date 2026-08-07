@@ -582,7 +582,13 @@ async def persian_unmute(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.effective_chat.restrict_member(
             target.id,
             ChatPermissions(
-                can_send_messages=True
+                can_send_messages=True,
+                can_send_audios=True,
+                can_send_photos=True,
+                can_send_polls=True,
+                can_send_videos=True,
+                can_send_documents=True,
+                can_send_other_messages=True
             )
         )
         await update.message.reply_text(
