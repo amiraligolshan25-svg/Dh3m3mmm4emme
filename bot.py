@@ -1215,7 +1215,7 @@ async def handle_left_member(update: Update, context: ContextTypes.DEFAULT_TYPE)
 async def lucky_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
     await query.answer()
-    if query.data = "lucky_new":
+    if query.data == "lucky_new":
         user = query.from_user
         number = random_randint(1, 1000)
 
