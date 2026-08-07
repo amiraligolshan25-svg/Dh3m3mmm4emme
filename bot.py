@@ -583,13 +583,15 @@ async def persian_unmute(update: Update, context: ContextTypes.DEFAULT_TYPE):
             target.id,
             ChatPermissions(
                 can_send_messages=True,
-                can_send_media=True,
-                can_send_other_messages=True,
-                can_add_web_page_previews=True,
+                can_send_audios=True,
+                can_send_photos=True,
+                can_react_to_messages=True,
                 can_send_polls=True,
-                can_change_info=True,
-                can_invite_users=True,
-                can_pin_messages=True
+                can_send_videos=True,
+                can_send_documents=True,
+                can_send_other_messages=True,
+                can_send_video_notes=True,
+                can_send_voice_notes=True
             )
         )
         await update.message.reply_text(
@@ -973,44 +975,20 @@ async def lottery_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def lucky_number_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
-    
-    if not context.user_data.get('lucky_number'):
-        context.user_data['lucky_number'] = random.randint(1, 100)
-        context.user_data['attempts'] = 0
-        context.user_data['max_attempts'] = 7
-    
-    target = context.user_data['lucky_number']
-    attempts = context.user_data['attempts']
-    max_attempts = context.user_data['max_attempts']
-    
-    if context.args and context.args[0].isdigit():
-        guess = int(context.args[0])
-        attempts += 1
-        context.user_data['attempts'] = attempts
-        
-        if guess == target:
-            msg = f"🎉 **تبریک! عدد {target} رو در {attempts} تلاش حدس زدی!** 🏆"
-            context.user_data['lucky_number'] = random.randint(1, 100)
-            context.user_data['attempts'] = 0
-        elif guess < target:
-            msg = f"📈 عدد {guess} **کوچک‌تر** از عدد مورد نظر است.\nتلاش‌های باقی‌مانده: {max_attempts - attempts}"
-        else:
-            msg = f"📉 عدد {guess} **بزرگ‌تر** از عدد مورد نظر است.\nتلاش‌های باقی‌مانده: {max_attempts - attempts}"
-        
-        if attempts >= max_attempts and guess != target:
-            msg = f"😔 **باختی!** عدد مورد نظر {target} بود.\n\nبرای بازی جدید دوباره `عدد شانسی` رو بفرست."
-            context.user_data['lucky_number'] = random.randint(1, 100)
-            context.user_data['attempts'] = 0
-    else:
-        msg = (
-            f"🔢 **بازی عدد شانسی**\n\n"
-            f"یک عدد بین ۱ تا ۱۰۰ حدس بزن.\n"
-            f"شما {max_attempts} شانس داری.\n\n"
-            f"📝 مثال: `عدد شانسی ۵۰`"
-        )
-    
-    await update.message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
+    number = random.randint(1, 1000)
 
+    keyboard = [
+        [InlineKeyboardButton("عدد جدید", callback_data="lucky_new")],
+        [InlineKeyboardButton("بازی ها", callback_data="games_menu")],
+        [InlineKeyboardButton("بستن", callback_data="close")],
+    ]
+    await update.message.reply_text(
+        f"عدد شانسی\n"
+        f"\n"
+        f"{user.full_name}"
+        f"\n"
+        f"عدد شما: {number}"
+    )
 async def bowling_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     pins = random.randint(0, 10)
@@ -1276,7 +1254,7 @@ def main():
     application.add_handler(MessageHandler(filters.Regex(r'^بن(\s|$)') | filters.Regex(r'^بن$'), persian_ban))
     application.add_handler(MessageHandler(filters.Regex(r'^(آن بن|رفع بن)(\s|$)') | filters.Regex(r'^(آن بن|رفع بن)$'), persian_unban))
     application.add_handler(MessageHandler(filters.Regex(r'^سکوت(\s|$)') | filters.Regex(r'^سکوت$'), persian_mute))
-    application.add_handler(MessageHandler(filters.Regex(r'^رفع سکوت(\s|$)') | filters.Regex(r'^رفع سکوت$'), persian_unmute))
+    application.add_handler(MessageHandler(filters.Regex(r'حذف سکوت(\s|$)') | filters.Regex(r'^حذف سکوت$'), persian_unmute))
     application.add_handler(MessageHandler(filters.Regex(r'^اخطار(\s|$)') | filters.Regex(r'^اخطار$'), persian_warn))
     application.add_handler(MessageHandler(filters.Regex(r'^(پاک کردن اخطار|پاک کردن اخطارها)(\s|$)') | filters.Regex(r'^(پاک کردن اخطار|پاک کردن اخطارها)$'), persian_unwarn))
     application.add_handler(MessageHandler(filters.Regex(r'^تعداد اخطار(\s|$)') | filters.Regex(r'^تعداد اخطار$'), persian_warns))
