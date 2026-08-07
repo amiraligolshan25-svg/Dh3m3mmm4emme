@@ -583,7 +583,6 @@ async def persian_unmute(update: Update, context: ContextTypes.DEFAULT_TYPE):
             target.id,
             ChatPermissions(
                 can_send_messages=True,
-                can_send_media=True,
                 can_send_other_messages=True,
                 can_add_web_page_previews=True,
                 can_send_polls=True,
