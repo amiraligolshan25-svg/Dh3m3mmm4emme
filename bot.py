@@ -1213,7 +1213,7 @@ async def handle_left_member(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 # ==================== تابع اصلی ====================
 async def lucky_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    query = update:callback_query
+    query = update.callback_query
     await query.answer()
     if query.data = "lucky_new":
         user = query.from_user
