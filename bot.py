@@ -1059,23 +1059,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data == "games_menu":
         await games_menu(update, context)
         await query.message.delete()
-    elif data == "lucky_new":
-        user = query.from_user
-        number = random.randint(1, 1000)
-        keyboard = [
-            [InlineKeyboardButton("عدد جدید", callback_data="lucky_new")],
-            [InlineKeyboardButton("بازی ها", callback_data="games_menu")],
-            [InlineKeyboardButton("بستن", callback_data="close")],
-        ]
-        await update.message.reply_text(
-            f"عدد شانسی\n"
-            f"\n"
-            f"{user.full_name}"
-            f"\n"
-            f"عدد شما: {number}",
-            parse_mode=ParseMode.MARKDOWN,
-            reply_markup=InlineKeyboardMarkup(keyboard)
-        )
+        
     elif data == "close":
         await query.message.delete()
     
@@ -1228,7 +1212,27 @@ async def handle_left_member(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await update.message.reply_text(text, parse_mode=ParseMode.MARKDOWN)
 
 # ==================== تابع اصلی ====================
+async def lucky_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update:callback_query
+    await query.answer()
+    if query.data = "lucky_new":
+        user = query.from_user
+        number = random_randint(1, 1000)
 
+        keyboard = [
+            [InlineKeyboardButton("عدد جدید", callback_data="lucky_new")],
+            [InlineKeyboardButton("بازی ها", callback_data="games_menu")],
+            [InlineKeyboardButton("بستن", callback_data="close")],
+        ]
+        await update.message.reply_text(
+            f"عدد شانسی\n"
+            f"\n"
+            f"{user.full_name}"
+            f"\n"
+            f"عدد شما: {number}",
+            parse_mode = ParseMode.MARKDOWN,
+            reply_markup = InlineKeyboardMarkup(keyboard)
+        )
 def main():
     if not BOT_TOKEN:
         print("❌ خطا: توکن ربات تنظیم نشده است!")
@@ -1247,7 +1251,7 @@ def main():
     application = Application.builder().token(BOT_TOKEN).build()
     
     # دستورات عمومی
-    application.add_handler(CallBackQueryHandler(lucky_callback, pattern=r'^lucky_'))
+    application.add_handler(CallbackQueryHandler(lucky_callback, pattern=r'^lucky_'))
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("help", help_command))
     
