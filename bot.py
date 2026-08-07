@@ -464,7 +464,7 @@ async def clear_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     try:
         count = int(context.args[0])
-    expect ValueError:
+    except ValueError:
         await update.message.reply_text("یک عدد وارد کن")
         return
     if count > 100:
@@ -482,7 +482,7 @@ async def clear_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         msg = await update.message.reply_text(f"تعداد {count} پیام پاک شد")
         await msg.delete(delay=3)
-    expect Expection as e:
+    except Expection as e:
         await update.message.reply_text(f"خطا: {str(e)}")
 @admin_only
 async def persian_ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
