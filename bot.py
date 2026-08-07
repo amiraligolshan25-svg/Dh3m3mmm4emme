@@ -8,7 +8,7 @@ load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPES):
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message = update.effectice_message
     await message.reply_text("test")
 async def promote_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
