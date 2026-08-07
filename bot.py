@@ -452,7 +452,38 @@ async def good_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # ==================== دستورات مدیریتی ====================
+@admin_only
+async def clear_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not context.args:
+        await update.message.reply_text(
+            "نحوه استفاده\n"
+            "حذف 100\n"
+            "حذف 50",
+            parse_mode = ParseMode.MARKDOWN
+        )
+        return
+    try:
+        count = int(context.args[0])
+    expect ValueError:
+        await update.message.reply_text("یک عدد وارد کن")
+        return
+    if count > 100:
+        count = 100
+        await update.message.reply_text("حداکثر 100 پیام")
+    if count < 1:
+        await update.message.reply_text("حداقل 100 پیام")
+        return
 
+    try:
+        message_id = update.message.message_id
+        message_ids = list(range(message_id - count, message_id)
+
+        await update.effective_chat.delete_messages(message_ids)
+
+        msg = await update.message.reply_text(f"تعداد {count} پیام پاک شد")
+        await msg.delete(delay=3)
+    expect Expection as e:
+        await update.message.reply_text(f"خطا: {str(e)}")
 @admin_only
 async def persian_ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     target = await get_target_user(update)
@@ -1290,7 +1321,8 @@ def main():
     application.add_handler(MessageHandler(filters.Regex(r'^عدد شانسی(\s|$)') | filters.Regex(r'^عدد شانسی$'), lucky_number_game))
     application.add_handler(MessageHandler(filters.Regex(r'^بولینگ(\s|$)') | filters.Regex(r'^بولینگ$'), bowling_game))
     application.add_handler(MessageHandler(filters.Regex(r'^بازی‌ها(\s|$)') | filters.Regex(r'^بازی‌ها$'), games_menu))
-    
+    application.add_handler(MessageHandler(filters.Regex(r'^حذف(\s|$)') | filters.Regex(r'^حذف$'), clear_command))
+
     # دکمه‌ها
     application.add_handler(CallbackQueryHandler(button_handler))
     
