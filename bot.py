@@ -452,38 +452,59 @@ async def good_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
 
 # ==================== دستورات مدیریتی ====================
+# ==================== دستور clear ====================
+
 @admin_only
 async def clear_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    پاک کردن تعداد مشخصی پیام
+    روش استفاده: .clear 10
+    """
+    chat = update.effective_chat
+    
+    # بررسی وجود تعداد
     if not context.args:
         await update.message.reply_text(
-            "نحوه استفاده\n"
-            "حذف 100\n"
-            "حذف 50",
-            parse_mode = ParseMode.MARKDOWN
+            "❗ نحوه استفاده:\n"
+            ".clear 10 - پاک کردن ۱۰ پیام آخر\n"
+            ".clear 50 - پاک کردن ۵۰ پیام آخر\n\n"
+            "⚠️ حداکثر ۱۰۰ پیام",
+            parse_mode=ParseMode.MARKDOWN
         )
         return
+    
+    # دریافت تعداد
     try:
         count = int(context.args[0])
-    except ValueError:
-        await update.message.reply_text("یک عدد وارد کن")
+    except (ValueError, IndexError):
+        await update.message.reply_text("❌ لطفاً یک عدد وارد کن. مثال: .clear 10")
         return
+    
+    # محدودیت‌ها
     if count > 100:
         count = 100
-        await update.message.reply_text("حداکثر 100 پیام")
     if count < 1:
-        await update.message.reply_text("حداقل 100 پیام")
+        await update.message.reply_text("❌ تعداد باید بیشتر از ۰ باشد.")
         return
-
+    
     try:
-        message_id = update.message.message_id
-        message_ids = list(range(message_id - count, message_id))
-
-        await update.effective_chat.delete_messages(message_ids)
-
-        msg = await update.message.reply_text(f"تعداد {count} پیام پاک شد")
+        # دریافت پیام جاری
+        msg_id = update.message.message_id
+        
+        # لیست پیام‌ها برای حذف
+        delete_ids = []
+        for i in range(1, count + 1):
+            delete_ids.append(msg_id - i)
+        
+        # حذف پیام‌ها
+        await chat.delete_messages(delete_ids)
+        
+        # پیام تایید
+        msg = await update.message.reply_text(f"🧹 {count} پیام پاک شد.", parse_mode=ParseMode.MARKDOWN)
         await msg.delete(delay=3)
-    except Expection as e:
-        await update.message.reply_text(f"خطا: {str(e)}")
+        
+    except Exception as e:
+        await update.message.reply_text(f"❌ خطا: {str(e)}")
 @admin_only
 async def persian_ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
     target = await get_target_user(update)
