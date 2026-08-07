@@ -5,7 +5,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 # دریافت توکن از متغیر محیطی
-TOKEN = os.environ.get("BOT_TOKEN")
+TOKEN = os.environ.get("8975300940:AAH6mhn22Vu65FkYoJCyOIgJWU93VN1SO7g")
 
 if not TOKEN:
     logging.error("متغیر محیطی BOT_TOKEN تنظیم نشده است!")
