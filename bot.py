@@ -588,7 +588,9 @@ async def persian_unmute(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 can_send_polls=True,
                 can_send_videos=True,
                 can_send_documents=True,
-                can_send_other_messages=True
+                can_send_other_messages=True,
+                can_add_web_page_previews=True,
+                can_invite_users=True
             )
         )
         await update.message.reply_text(
