@@ -379,17 +379,17 @@ async def ammar_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(text, parse_mode=ParseMode.MARKDOWN)
 
 async def id_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    target = await get_target_user(update)
-    if not target:
-        target = update.effective_user
-    
-    await update.message.reply_text(
-        f"🆔 **آیدی کاربر:**\n\n"
-        f"👤 {target.full_name}\n"
-        f"🆔 `{target.id}`\n"
-        f"👤 @{target.username if target.username else 'ندارد'}",
-        parse_mode=ParseMode.MARKDOWN
+    user = update.effective_user
+    chat = update.effective_chat
+
+    user_id = user.id
+    name = user.full_name
+    username = user.username if user.username else "ندارد"
+
+    text = (
+        f"آیدی عددی شما:{user_id}\nنام شما:{name}\nیوزرنیم:@{username}\nآیدی چت فعلی:{chat.id}"
     )
+    await update.message.reply_text(text, parse_mode='Markdown')
 
 async def ghavanin_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
