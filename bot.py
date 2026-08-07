@@ -986,7 +986,9 @@ async def lucky_number_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"\n"
         f"{user.full_name}"
         f"\n"
-        f"عدد شما: {number}"
+        f"عدد شما: {number}",
+        parse_mode=ParseMode.MARKDOWN,
+        reply_markup=InlineKeyboardMarkup(keyboard)
     )
 async def bowling_game(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
