@@ -62,6 +62,21 @@ async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("عالیه! خوشحالم که حالت خوبه 😊")
     else:
         await update.message.reply_text(f"📩 شما گفتید: {user_message}")
+        
+async def ping(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """دستور /ping - بررسی وضعیت ربات"""
+    start_time = time.time()
+    
+    # ارسال پیام
+    await update.message.reply_text("🏓 پینگ...")
+    
+    # محاسبه زمان پاسخ
+    end_time = time.time()
+    ping_time = round((end_time - start_time) * 1000)  # تبدیل به میلی‌ثانیه
+    
+    # ویرایش پیام و نمایش پینگ
+    await update.message.reply_text(f"🏓 پینگ: {ping_time}ms")
+    
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """مدیریت خطاها"""
@@ -77,6 +92,7 @@ def main():
 
         # اضافه کردن هندلرها
         app.add_handler(CommandHandler("start", start))
+        app.add_handler(CommandHandler("ping", ping))
         app.add_handler(CommandHandler("help", help_command))
         app.add_handler(CommandHandler("about", about_command))
         app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, echo))
