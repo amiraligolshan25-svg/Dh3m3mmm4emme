@@ -1059,7 +1059,23 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data == "games_menu":
         await games_menu(update, context)
         await query.message.delete()
-    
+    elif data == "lucky_new":
+        user = query.from_user
+        number = random.randint(1, 1000)
+        keyboard = [
+            [InlineKeyboardButton("عدد جدید", callback_data="lucky_new")],
+            [InlineKeyboardButton("بازی ها", callback_data="games_menu")],
+            [InlineKeyboardButton("بستن", callback_data="close")],
+        ]
+        await update.message.reply_text(
+            f"عدد شانسی\n"
+            f"\n"
+            f"{user.full_name}"
+            f"\n"
+            f"عدد شما: {number}",
+            parse_mode=ParseMode.MARKDOWN,
+            reply_markup=InlineKeyboardMarkup(keyboard)
+        )
     elif data == "close":
         await query.message.delete()
     
