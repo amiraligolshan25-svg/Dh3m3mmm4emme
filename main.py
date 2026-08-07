@@ -7,7 +7,7 @@ load_dotenv()
 
 TOKEN = os.getenv("BOT_TOKEN")
 
-def load_module(name);
+def load_module(name):
     path = os.path.join("modules", f"{name}.py")
     spec = importlib.util.spec_from_file_location(name, path)
 
