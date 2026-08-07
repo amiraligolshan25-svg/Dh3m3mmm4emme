@@ -1,6 +1,7 @@
 import os
 import sys
 import logging
+import time
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -49,7 +50,6 @@ async def about_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "📅 تاریخ ایجاد: 2024\n"
         "🚀 میزبانی شده روی Railway"
     )
-
 async def echo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """اکو کردن پیام‌های کاربر"""
     user_message = update.message.text
