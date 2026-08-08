@@ -636,8 +636,23 @@ async def kick_me(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text(f"❌ خطا: {str(e)}")
 
-# ==================== اجرای اصلی ====================
+# /link
+async def group_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat_id = update.effective_chat.id
+    user_id = update.effective_user.id
+    try:
+        chat_member = update.effective_chat.get_member(user_id)
+        if chat_member not in ["administrator", "creator"]:
+            await update.message.reply_text("فقط ادمین ها میتونن لینک دعوت بگیرن")
+            return
+    except Exception as e:
+        try:
+            link = await context.bot.createChatInviteLink(chat_id, None, None, None, False)
+            await update.effective_message.reply_text(f"link: {link.invite_link}")
+        except Exception as e:
+            await update.effective_message.reply_text(f"error: {e}")
 
+# ==================== اجرای اصلی ====================
 def main():
     app = Application.builder().token(TOKEN).build()
     
@@ -669,6 +684,7 @@ def main():
     app.add_handler(CommandHandler("pin", pin_message))
     app.add_handler(CommandHandler("unpin", unpin_message))
     app.add_handler(CommandHandler("kickme", kick_me))
+    app.add_handler(CommandHandler("link", group_link))
     
     print("🤖 ربات مدیریت و سرگرمی گروه روشن شد...")
     print(f"✅ توکن: {TOKEN[:10]}... (مخفی شده)")
