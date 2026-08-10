@@ -99,6 +99,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             InlineKeyboardButton("ℹ️ راهنما", callback_data="help")
         ],
             InlineKeyboardButton("درباره ی ربات", callback_data="about")
+        ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
