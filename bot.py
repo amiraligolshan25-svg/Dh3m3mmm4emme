@@ -144,11 +144,13 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"🔢 هفته: {now.isocalendar()[1]}\n"
             f"📊 روز سال: {now.timetuple().tm_yday}"
         )
+        
         await query.edit_message_text(text, parse_mode='Markdown')
     elif query.data == "about":
         text = ("this robot is created by @Real_NoName"
         )
-        await query.edit_message_text(text, parse_mode='Markdown')
+        
+        await query.edit_message_text(text)
     elif query.data == "management":
         text = (
             "📌 **دستورات مدیریتی (فقط ادمین‌ها):**\n\n"
