@@ -31,6 +31,15 @@ async def is_admin(update: Update, user_id: int) -> bool:
     except:
         return False
 
+
+async def is_owner(update: Update,user_id: int) -> bool:
+    try:
+        chat_membet = await update.effective_chat.get_member(user_id)
+        return chat_member.status in [ChatMember.OWNER]
+    except:
+        return False
+
+
 # تبدیل زمان به ثانیه
 def parse_time(time_str):
     time_str = time_str.lower()
@@ -401,8 +410,8 @@ async def unban_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("این دستور فقط برای گروه هاست")
         return
     
-    if not await is_admin(update, user_id):
-        await update.message.reply_text("⛔ فقط ادمین‌ها می‌تونن از این دستور استفاده کنن!")
+    if not await is_owner(update, user_id):
+        await update.message.reply_text("⛔ فقط اونرها می‌تونن از این دستور استفاده کنن!")
         return
     
     if not context.args:
