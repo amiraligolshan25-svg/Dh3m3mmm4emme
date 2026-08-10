@@ -98,7 +98,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             InlineKeyboardButton("📌 مدیریت", callback_data="management"),
             InlineKeyboardButton("ℹ️ راهنما", callback_data="help")
         ],
-            InlineKeyboarfButton("درباره ی ربات", callback_data="about")
+            InlineKeyboardButton("درباره ی ربات", callback_data="about")
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
