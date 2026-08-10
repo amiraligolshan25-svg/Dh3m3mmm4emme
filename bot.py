@@ -97,7 +97,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [
             InlineKeyboardButton("📌 مدیریت", callback_data="management"),
             InlineKeyboardButton("ℹ️ راهنما", callback_data="help")
-        ]
+        ],
+            InlineKeyboarfButton("درباره ی ربات", callback_data="about")
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     
@@ -142,7 +143,10 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"📊 روز سال: {now.timetuple().tm_yday}"
         )
         await query.edit_message_text(text, parse_mode='Markdown')
-    
+    elif query.data == "about":
+        text = ("this robot is created by @Real_NoName"
+        )
+        await query.edit_message_text(text, parse_mode='Markdown')
     elif query.data == "management":
         text = (
             "📌 **دستورات مدیریتی (فقط ادمین‌ها):**\n\n"
