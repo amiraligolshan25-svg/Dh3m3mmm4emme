@@ -343,7 +343,7 @@ async def ban_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
     if not is_group(update):
-        await.message.reply_text("این دستور فقط برای گروه هاست")
+        await update.message.reply_text("این دستور فقط برای گروه هاست")
     
     if not await is_admin(update, user_id):
         await update.message.reply_text("⛔ فقط ادمین‌ها می‌تونن از این دستور استفاده کنن!")
@@ -397,7 +397,7 @@ async def unban_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
     if not is_group(update):
-        await.message.reply_text("این دستور فقط برای گروه هاست")
+        await update.message.reply_text("این دستور فقط برای گروه هاست")
     
     if not await is_admin(update, user_id):
         await update.message.reply_text("⛔ فقط ادمین‌ها می‌تونن از این دستور استفاده کنن!")
@@ -429,7 +429,7 @@ async def kick_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
 
     if not is_group(update):
-        await.message.reply_text("این دستور فقط برای گروه هاست")
+        await update.message.reply_text("این دستور فقط برای گروه هاست")
         
     if not await is_admin(update, user_id):
         await update.message.reply_text("⛔ فقط ادمین‌ها می‌تونن از این دستور استفاده کنن!")
@@ -484,7 +484,7 @@ async def mute_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
     if not is_group(update):
-        await.message.reply_text("این دستور فقط برای گروه هاست")
+        await update.message.reply_text("این دستور فقط برای گروه هاست")
         
     if not await is_admin(update, user_id):
         await update.message.reply_text("⛔ فقط ادمین‌ها می‌تونن از این دستور استفاده کنن!")
@@ -558,7 +558,9 @@ async def mute_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def unmute_user(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
-    
+    if not is_group(update):
+        await update.message.reply_text("این دستور فقط برای گروه هاست")
+        
     if not await is_admin(update, user_id):
         await update.message.reply_text("⛔ فقط ادمین‌ها می‌تونن از این دستور استفاده کنن!")
         return
@@ -601,7 +603,7 @@ async def pin_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
     if not is_group(update):
-        await.message.reply_text("این دستور فقط برای گروه هاست")
+        await update.message.reply_text("این دستور فقط برای گروه هاست")
     if not await is_admin(update, user_id):
         await update.message.reply_text("⛔ فقط ادمین‌ها می‌تونن پیام رو پین کنن!")
         return
@@ -629,7 +631,7 @@ async def unpin_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
     if not is_group(update):
-        await.message.reply_text("این دستور فقط برای گروه هاست")
+        await update.message.reply_text("این دستور فقط برای گروه هاست")
         
     if not await is_admin(update, user_id):
         await update.message.reply_text("⛔ فقط ادمین‌ها می‌تونن پیام رو آنپین کنن!")
@@ -653,7 +655,7 @@ async def kick_me(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
     if not is_group(update):
-        await.message.reply_text("این دستور فقط برای گروه هاست")
+        await update.message.reply_text("این دستور فقط برای گروه هاست")
         
     try:
         await context.bot.ban_chat_member(chat_id, user_id, revoke_messages=False)
@@ -667,7 +669,7 @@ async def group_link(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.effective_chat.id
     user_id = update.effective_user.id
     if not is_group(update):
-        await.message.reply_text("این دستور فقط برای گروه هاست")
+        await update.message.reply_text("این دستور فقط برای گروه هاست")
 
     if not await is_admin(update, user_id):
         await update.message.reply_text("⛔ فقط ادمین‌ها می‌تونن از این دستور استفاده کنن!")
