@@ -756,10 +756,14 @@ async def do_attack(update: Update, context: ContextTypes.DEFAULT_TYPE, attack_t
     elif attack_type == "land":
         my_power = my["equipment"]["tanks"] * 2 + my["army"] // 1000
         enemy_power = enemy["equipment"]["tanks"] * 2 + enemy["army"] // 1000
-        if my_power > enemy_power * 1.2:
+        if my_power > enemy_power * 1.1:
             loss_my = random.randint(5, 12)
             loss_en = random.randint(18, 35)
-            result = f"⚔️ پیروزی زمینی مقابل {enemy['name']}!\nتلفات شما: {loss_my}% | تلفات دشمن: {loss_en}%"
+            result = (
+                f"⚔️پیروزی زمینی مقابل {enemy['name']!\n\n}"
+                f"تلفات شما: {loss_my}"
+                f"تلفات دوژمن: {loss_en}"
+            )
             my["army"] = int(my["army"] * (1 - loss_my/100))
             enemy["army"] = int(enemy["army"] * (1 - loss_en/100))
             my["equipment"]["tanks"] = int(my["equipment"]["tanks"] * 0.92)
@@ -767,7 +771,7 @@ async def do_attack(update: Update, context: ContextTypes.DEFAULT_TYPE, attack_t
         else:
             loss_my = random.randint(15, 30)
             loss_en = random.randint(8, 18)
-            result = f"⚔️ حمله زمینی به {enemy['name']} ناموفق بود.\nتلفات شما: {loss_my}% | تلفات دشمن: {loss_en}%"
+            result = f"⚔️حمله ناموفق به {enemy['name']} \nتلفات شما: {loss_my} \n تلفات دوژمن: {loss_en}"
             my["army"] = int(my["army"] * (1 - loss_my/100))
             enemy["army"] = int(enemy["army"] * (1 - loss_en/100))
     elif attack_type == "air":
