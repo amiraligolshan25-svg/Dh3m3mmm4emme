@@ -101,6 +101,8 @@ async def welcome_new_member(update: Update, context: ContextTypes.DEFAULT_TYPE)
 # ==================== دستور /start ====================
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if is_group(update):
+        return
     keyboard = [
         [
             InlineKeyboardButton("🎮 بازی‌ها", callback_data="games"),
