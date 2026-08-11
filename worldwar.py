@@ -1,230 +1,717 @@
-import logging
+# worldwar.py
+# ربات شبیه‌سازی جنگ جهانی واقعی - نسخه کامل
+
+import json
+import os
+import random
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 # ----------------- تنظیمات -----------------
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+DATA_FILE = "world_war_data.json"
 
-# وضعیت کاربران (در حافظه)
-user_data = {}
-
-# اطلاعات پایه کشورها (واقع‌گرایانه بر اساس ۱۹۳۹-۱۹۴۵)
-COUNTRIES = {
+# ==================== داده‌های اولیه کشورها ====================
+DEFAULT_COUNTRIES = {
     "germany": {
         "name": "آلمان نازی",
         "leader": "آدولف هیتلر",
         "power": 95,
         "army": 3200000,
-        "navy": 45,
-        "airforce": 4200,
-        "industry": 90,
+        "economy_mode": "war",
+        "industry": 92,
+        "manpower": 28000000,
+        "money": 8500000,
+        "war_credit": 120000,
         "nuclear": False,
+        "occupied_by": None,
+        "at_war_with": [],
         "allies": ["italy", "japan"],
-        "enemies": ["soviet", "uk", "usa", "france"]
-    },
-    "soviet": {
-        "name": "اتحاد جماهیر شوروی",
-        "leader": "ژوزف استالین",
-        "power": 88,
-        "army": 4500000,
-        "navy": 30,
-        "airforce": 3800,
-        "industry": 75,
-        "nuclear": False,
-        "allies": [],
-        "enemies": ["germany"]
+        "sanctions": [],
+        "blockades": [],
+        "resources": {"oil": 18000, "steel": 22000, "coal": 85000, "food": 42000, "rubber": 3200, "aluminum": 1800, "uranium": 120},
+        "stockpile": {"oil": 45000, "steel": 38000, "coal": 120000, "food": 65000, "rubber": 8000, "aluminum": 4500, "uranium": 280},
+        "production": {"tanks": 1200, "planes": 1800, "ships": 8, "guns": 45000, "ammo": 120000},
+        "equipment": {"tanks": 8500, "fighters": 4200, "ships": 95, "missiles": 180, "nukes": 0}
     },
     "usa": {
         "name": "ایالات متحده آمریکا",
         "leader": "فرانکلین روزولت",
         "power": 98,
         "army": 2800000,
-        "navy": 120,
-        "airforce": 5500,
+        "economy_mode": "war",
         "industry": 100,
-        "nuclear": True,          # از اوت ۱۹۴۵
+        "manpower": 65000000,
+        "money": 25000000,
+        "war_credit": 450000,
+        "nuclear": True,
+        "occupied_by": None,
+        "at_war_with": [],
         "allies": ["uk", "soviet"],
-        "enemies": ["germany", "japan"]
+        "sanctions": [],
+        "blockades": [],
+        "resources": {"oil": 185000, "steel": 85000, "coal": 550000, "food": 180000, "rubber": 12000, "aluminum": 9500, "uranium": 850},
+        "stockpile": {"oil": 320000, "steel": 150000, "coal": 700000, "food": 250000, "rubber": 28000, "aluminum": 22000, "uranium": 1600},
+        "production": {"tanks": 2800, "planes": 6500, "ships": 35, "guns": 98000, "ammo": 320000},
+        "equipment": {"tanks": 15000, "fighters": 12000, "ships": 280, "missiles": 320, "nukes": 3}
+    },
+    "soviet": {
+        "name": "اتحاد جماهیر شوروی",
+        "leader": "ژوزف استالین",
+        "power": 88,
+        "army": 4500000,
+        "economy_mode": "war",
+        "industry": 78,
+        "manpower": 95000000,
+        "money": 6200000,
+        "war_credit": 95000,
+        "nuclear": False,
+        "occupied_by": None,
+        "at_war_with": [],
+        "allies": [],
+        "sanctions": [],
+        "blockades": [],
+        "resources": {"oil": 95000, "steel": 42000, "coal": 180000, "food": 78000, "rubber": 1800, "aluminum": 3200, "uranium": 420},
+        "stockpile": {"oil": 140000, "steel": 65000, "coal": 250000, "food": 95000, "rubber": 3500, "aluminum": 5800, "uranium": 780},
+        "production": {"tanks": 2200, "planes": 3100, "ships": 6, "guns": 72000, "ammo": 210000},
+        "equipment": {"tanks": 18000, "fighters": 7500, "ships": 45, "missiles": 90, "nukes": 0}
     },
     "uk": {
         "name": "بریتانیا",
         "leader": "وینستون چرچیل",
         "power": 82,
         "army": 1800000,
-        "navy": 95,
-        "airforce": 3100,
-        "industry": 70,
+        "economy_mode": "war",
+        "industry": 72,
+        "manpower": 22000000,
+        "money": 9800000,
+        "war_credit": 180000,
         "nuclear": False,
+        "occupied_by": None,
+        "at_war_with": [],
         "allies": ["usa"],
-        "enemies": ["germany", "italy", "japan"]
+        "sanctions": [],
+        "blockades": [],
+        "resources": {"oil": 12000, "steel": 18000, "coal": 210000, "food": 28000, "rubber": 4500, "aluminum": 2100, "uranium": 90},
+        "stockpile": {"oil": 35000, "steel": 28000, "coal": 280000, "food": 42000, "rubber": 9000, "aluminum": 4800, "uranium": 160},
+        "production": {"tanks": 650, "planes": 2200, "ships": 18, "guns": 38000, "ammo": 95000},
+        "equipment": {"tanks": 4200, "fighters": 5100, "ships": 210, "missiles": 140, "nukes": 0}
     },
     "japan": {
         "name": "امپراتوری ژاپن",
-        "leader": "هیهی‌تو",
+        "leader": "هیروهیتو",
         "power": 78,
         "army": 2500000,
-        "navy": 80,
-        "airforce": 2800,
-        "industry": 65,
+        "economy_mode": "war",
+        "industry": 68,
+        "manpower": 32000000,
+        "money": 5100000,
+        "war_credit": 78000,
         "nuclear": False,
+        "occupied_by": None,
+        "at_war_with": [],
         "allies": ["germany", "italy"],
-        "enemies": ["usa", "uk", "china"]
+        "sanctions": [],
+        "blockades": [],
+        "resources": {"oil": 8500, "steel": 9500, "coal": 42000, "food": 38000, "rubber": 2800, "aluminum": 1100, "uranium": 45},
+        "stockpile": {"oil": 18000, "steel": 15000, "coal": 55000, "food": 48000, "rubber": 5500, "aluminum": 2400, "uranium": 80},
+        "production": {"tanks": 280, "planes": 1600, "ships": 12, "guns": 22000, "ammo": 65000},
+        "equipment": {"tanks": 2800, "fighters": 3800, "ships": 160, "missiles": 70, "nukes": 0}
     },
     "italy": {
         "name": "ایتالیا",
         "leader": "بنیتو موسولینی",
         "power": 55,
         "army": 1500000,
-        "navy": 40,
-        "airforce": 1800,
-        "industry": 45,
+        "economy_mode": "war",
+        "industry": 48,
+        "manpower": 18000000,
+        "money": 3200000,
+        "war_credit": 42000,
         "nuclear": False,
+        "occupied_by": None,
+        "at_war_with": [],
         "allies": ["germany", "japan"],
-        "enemies": ["uk", "usa"]
+        "sanctions": [],
+        "blockades": [],
+        "resources": {"oil": 4500, "steel": 6200, "coal": 18000, "food": 22000, "rubber": 900, "aluminum": 650, "uranium": 20},
+        "stockpile": {"oil": 9000, "steel": 11000, "coal": 28000, "food": 30000, "rubber": 1800, "aluminum": 1200, "uranium": 35},
+        "production": {"tanks": 180, "planes": 650, "ships": 5, "guns": 14000, "ammo": 38000},
+        "equipment": {"tanks": 1600, "fighters": 1400, "ships": 55, "missiles": 25, "nukes": 0}
     },
     "iran": {
         "name": "ایران",
-        "leader": "رضاشاه / محمدرضا پهلوی",
-        "power": 25,
-        "army": 120000,
-        "navy": 5,
-        "airforce": 150,
-        "industry": 20,
+        "leader": "محمدرضا پهلوی",
+        "power": 28,
+        "army": 125000,
+        "economy_mode": "peace",
+        "industry": 24,
+        "manpower": 9000000,
+        "money": 1800000,
+        "war_credit": 25000,
         "nuclear": False,
+        "occupied_by": None,
+        "at_war_with": [],
         "allies": [],
-        "enemies": []
+        "sanctions": [],
+        "blockades": [],
+        "resources": {"oil": 52000, "steel": 1400, "coal": 900, "food": 19000, "rubber": 220, "aluminum": 180, "uranium": 15},
+        "stockpile": {"oil": 78000, "steel": 3200, "coal": 1600, "food": 27000, "rubber": 500, "aluminum": 380, "uranium": 40},
+        "production": {"tanks": 8, "planes": 12, "ships": 0, "guns": 1500, "ammo": 9000},
+        "equipment": {"tanks": 180, "fighters": 95, "ships": 6, "missiles": 5, "nukes": 0}
     }
 }
 
-# ----------------- توابع -----------------
+MARKET_PRICES = {
+    "tank": 8500,
+    "fighter": 12500,
+    "ship": 98000,
+    "missile": 48000,
+    "nuke": 2800000,
+    "oil": 22,
+    "steel": 48,
+    "coal": 14,
+    "food": 9,
+    "rubber": 65,
+    "aluminum": 85,
+    "uranium": 3800
+}
+
+FACTORY_COST = {
+    "steel": 48000,
+    "tank": 92000,
+    "aircraft": 115000,
+    "shipyard": 195000,
+    "oil": 68000,
+    "uranium": 220000
+}
+
+# ==================== مدیریت داده ====================
+def load_data():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            return data.get("users", {}), data.get("countries", DEFAULT_COUNTRIES)
+    return {}, DEFAULT_COUNTRIES.copy()
+
+def save_data(users, countries):
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump({"users": users, "countries": countries}, f, ensure_ascii=False, indent=2)
+
+user_data, COUNTRIES = load_data()
+
+def update_and_save():
+    save_data(user_data, COUNTRIES)
+
+# ==================== توابع کمکی ====================
+def get_user_country(user_id):
+    uid = str(user_id)
+    if uid not in user_data:
+        return None
+    return user_data[uid]["country"]
+
+def is_at_war(c1, c2):
+    return c2 in COUNTRIES[c1].get("at_war_with", [])
+
+# ==================== دستورات اصلی ====================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "🌍 ربات شبیه‌سازی جنگ جهانی واقعی\n\n"
+    text = (
+        "🌍 **ربات شبیه‌سازی جنگ جهانی واقعی**\n\n"
         "دستورات اصلی:\n"
         "/country_set [کشور] - انتخاب کشور\n"
-        "/country_info - اطلاعات کشور خودت\n"
+        "/country_info - اطلاعات کشور\n"
         "/status - وضعیت کلی\n"
-        "/missile [کشور] - حمله موشکی\n"
-        "/atom [کشور] - حمله اتمی\n"
-        "/nuclear [کشور] - حمله هسته‌ای\n"
-        "/help - راهنما"
-    )
-
-async def country_set(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
-    if not context.args:
-        await update.message.reply_text("مثال: /country_set germany")
-        return
-
-    country = context.args[0].lower()
-    if country not in COUNTRIES:
-        await update.message.reply_text("کشور معتبر نیست. کشورهای موجود:\n" + ", ".join(COUNTRIES.keys()))
-        return
-
-    user_data[user_id] = {"country": country}
-    name = COUNTRIES[country]["name"]
-    await update.message.reply_text(f"✅ کشور شما روی **{name}** تنظیم شد.")
-
-async def country_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
-    if user_id not in user_data:
-        await update.message.reply_text("اول کشور خودت را انتخاب کن: /country_set [کشور]")
-        return
-
-    c = COUNTRIES[user_data[user_id]["country"]]
-    text = (
-        f"🏳️ **{c['name']}**\n"
-        f"رهبر: {c['leader']}\n"
-        f"قدرت کلی: {c['power']}/100\n"
-        f"ارتش: {c['army']:,} نفر\n"
-        f"نیروی دریایی: {c['navy']} کشتی اصلی\n"
-        f"نیروی هوایی: {c['airforce']} هواپیما\n"
-        f"صنعت: {c['industry']}/100\n"
-        f"سلاح هسته‌ای: {'دارد' if c['nuclear'] else 'ندارد'}\n"
-        f"متحدان: {', '.join(c['allies']) or 'هیچ'}\n"
-        f"دشمنان: {', '.join(c['enemies']) or 'هیچ'}"
+        "/economy - اقتصاد و منابع\n"
+        "/army - ارتش و تجهیزات\n"
+        "/market - قیمت‌های بازار\n"
+        "/buy [وسیله] [تعداد]\n"
+        "/sell [منبع] [مقدار]\n"
+        "/build_factory [نوع]\n"
+        "/spy [کشور]\n"
+        "/lend_lease [کشور] [وسیله] [تعداد]\n"
+        "/declare_war [کشور]\n"
+        "/peace [کشور]\n"
+        "/land_attack [کشور]\n"
+        "/air_attack [کشور]\n"
+        "/naval_attack [کشور]\n"
+        "/missile [کشور]\n"
+        "/nuclear [کشور]\n"
+        "/occupy [کشور]\n"
+        "/sanction [کشور]\n"
+        "/blockade [کشور]\n"
+        "/help"
     )
     await update.message.reply_text(text, parse_mode="Markdown")
 
-async def missile(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await handle_attack(update, context, "missile")
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await start(update, context)
 
-async def atom(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await handle_attack(update, context, "atom")
+async def country_set(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    if not context.args:
+        await update.message.reply_text("مثال: /country_set germany\nکشورهای موجود: " + ", ".join(COUNTRIES.keys()))
+        return
+    country = context.args[0].lower()
+    if country not in COUNTRIES:
+        await update.message.reply_text("کشور معتبر نیست.")
+        return
+    if COUNTRIES[country].get("occupied_by"):
+        await update.message.reply_text("این کشور در حال حاضر اشغال شده است.")
+        return
+    user_data[uid] = {"country": country}
+    update_and_save()
+    await update.message.reply_text(f"✅ کشور شما روی **{COUNTRIES[country]['name']}** تنظیم شد.", parse_mode="Markdown")
 
-async def nuclear(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await handle_attack(update, context, "nuclear")
+async def country_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    c = COUNTRIES[country]
+    text = (
+        f"🏳️ **{c['name']}**\n"
+        f"رهبر: {c['leader']}\n"
+        f"قدرت: {c['power']}/100\n"
+        f"ارتش: {c['army']:,}\n"
+        f"صنعت: {c['industry']}/100\n"
+        f"پول: {c['money']:,}\n"
+        f"War Credit: {c['war_credit']:,}\n"
+        f"هسته‌ای: {'دارد' if c['nuclear'] else 'ندارد'}\n"
+        f"اشغال‌شده توسط: {c.get('occupied_by') or 'هیچ‌کس'}\n"
+        f"در حال جنگ با: {', '.join(c.get('at_war_with', [])) or 'هیچ‌کس'}"
+    )
+    await update.message.reply_text(text, parse_mode="Markdown")
 
-async def handle_attack(update: Update, context: ContextTypes.DEFAULT_TYPE, attack_type: str):
-    user_id = update.effective_user.id
-    if user_id not in user_data:
+async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await country_info(update, context)
+
+async def economy(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    c = COUNTRIES[country]
+    res = c["resources"]
+    stock = c["stockpile"]
+    text = (
+        f"📊 **اقتصاد {c['name']}**\n"
+        f"حالت: {'اقتصاد جنگی' if c['economy_mode']=='war' else 'صلح‌آمیز'}\n"
+        f"صنعت: {c['industry']}/100 | نیروی کار: {c['manpower']:,}\n"
+        f"پول: {c['money']:,} | War Credit: {c['war_credit']:,}\n\n"
+        f"**تولید ماهانه منابع:**\n"
+        f"نفت: {res['oil']:,} | فولاد: {res['steel']:,} | زغال: {res['coal']:,}\n"
+        f"غذا: {res['food']:,} | لاستیک: {res['rubber']:,} | آلومینیوم: {res['aluminum']:,} | اورانیوم: {res['uranium']:,}\n\n"
+        f"**ذخیره:**\n"
+        f"نفت: {stock['oil']:,} | فولاد: {stock['steel']:,} | زغال: {stock['coal']:,}\n"
+        f"غذا: {stock['food']:,} | اورانیوم: {stock['uranium']:,}"
+    )
+    await update.message.reply_text(text, parse_mode="Markdown")
+
+async def army(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    c = COUNTRIES[country]
+    e = c["equipment"]
+    p = c["production"]
+    text = (
+        f"⚔️ **ارتش {c['name']}**\n"
+        f"نیروی انسانی: {c['army']:,}\n\n"
+        f"**تجهیزات فعلی:**\n"
+        f"تانک: {e['tanks']:,} | جنگنده: {e['fighters']:,}\n"
+        f"ناو: {e['ships']:,} | موشک: {e['missiles']:,} | هسته‌ای: {e['nukes']}\n\n"
+        f"**تولید ماهانه:**\n"
+        f"تانک: {p['tanks']} | هواپیما: {p['planes']} | کشتی: {p['ships']}"
+    )
+    await update.message.reply_text(text, parse_mode="Markdown")
+
+async def market(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = "🛒 **قیمت‌های بازار (War Credit):**\n\n"
+    for item, price in MARKET_PRICES.items():
+        text += f"• {item}: {price:,}\n"
+    text += "\n/buy [وسیله] [تعداد]\n/sell [منبع] [مقدار]"
+    await update.message.reply_text(text)
+
+async def buy(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    if len(context.args) < 2:
+        await update.message.reply_text("مثال: /buy tank 50")
+        return
+    item = context.args[0].lower()
+    try:
+        amount = int(context.args[1])
+    except:
+        await update.message.reply_text("تعداد باید عدد باشد.")
+        return
+    if item not in ["tank", "fighter", "ship", "missile", "nuke"]:
+        await update.message.reply_text("وسیله معتبر نیست.")
+        return
+    if item == "nuke" and not COUNTRIES[country]["nuclear"]:
+        await update.message.reply_text("کشور شما فناوری هسته‌ای ندارد.")
+        return
+    cost = MARKET_PRICES[item] * amount
+    if COUNTRIES[country]["war_credit"] < cost:
+        await update.message.reply_text(f"War Credit کافی نیست. نیاز: {cost:,}")
+        return
+    COUNTRIES[country]["war_credit"] -= cost
+    key = "nukes" if item == "nuke" else item + "s" if item != "ship" else "ships"
+    if item == "fighter":
+        key = "fighters"
+    elif item == "tank":
+        key = "tanks"
+    elif item == "missile":
+        key = "missiles"
+    COUNTRIES[country]["equipment"][key] = COUNTRIES[country]["equipment"].get(key, 0) + amount
+    update_and_save()
+    await update.message.reply_text(f"✅ {amount} عدد {item} خریداری شد. هزینه: {cost:,} War Credit")
+
+async def sell(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    if len(context.args) < 2:
+        await update.message.reply_text("مثال: /sell oil 5000")
+        return
+    resource = context.args[0].lower()
+    try:
+        amount = int(context.args[1])
+    except:
+        await update.message.reply_text("مقدار باید عدد باشد.")
+        return
+    if resource not in MARKET_PRICES or resource in ["tank", "fighter", "ship", "missile", "nuke"]:
+        await update.message.reply_text("منبع معتبر نیست.")
+        return
+    if COUNTRIES[country]["stockpile"].get(resource, 0) < amount:
+        await update.message.reply_text("ذخیره کافی نداری.")
+        return
+    income = MARKET_PRICES[resource] * amount
+    COUNTRIES[country]["stockpile"][resource] -= amount
+    COUNTRIES[country]["war_credit"] += income
+    update_and_save()
+    await update.message.reply_text(f"✅ {amount:,} واحد {resource} فروخته شد. درآمد: {income:,} War Credit")
+
+async def build_factory(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
         await update.message.reply_text("اول کشور خودت را انتخاب کن.")
         return
     if not context.args:
-        await update.message.reply_text(f"مثال: /{attack_type} germany")
+        text = "کارخانه‌های قابل ساخت:\n"
+        for k, v in FACTORY_COST.items():
+            text += f"• {k}: {v:,} War Credit\n"
+        await update.message.reply_text(text)
         return
+    ftype = context.args[0].lower()
+    if ftype not in FACTORY_COST:
+        await update.message.reply_text("نوع کارخانه نامعتبر است.")
+        return
+    cost = FACTORY_COST[ftype]
+    if COUNTRIES[country]["war_credit"] < cost:
+        await update.message.reply_text(f"پول کافی نیست. هزینه: {cost:,}")
+        return
+    COUNTRIES[country]["war_credit"] -= cost
+    COUNTRIES[country]["industry"] = min(100, COUNTRIES[country]["industry"] + 5)
+    if ftype == "tank":
+        COUNTRIES[country]["production"]["tanks"] += 200
+    elif ftype == "aircraft":
+        COUNTRIES[country]["production"]["planes"] += 250
+    elif ftype == "shipyard":
+        COUNTRIES[country]["production"]["ships"] += 4
+    elif ftype == "steel":
+        COUNTRIES[country]["resources"]["steel"] += 3000
+    elif ftype == "oil":
+        COUNTRIES[country]["resources"]["oil"] += 5000
+    elif ftype == "uranium":
+        COUNTRIES[country]["resources"]["uranium"] += 80
+    update_and_save()
+    await update.message.reply_text(f"🏭 کارخانه {ftype} ساخته شد! صنعت افزایش یافت.")
 
+async def spy(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    if not context.args:
+        await update.message.reply_text("مثال: /spy germany")
+        return
     target = context.args[0].lower()
-    if target not in COUNTRIES:
-        await update.message.reply_text("کشور هدف معتبر نیست.")
+    if target not in COUNTRIES or target == country:
+        await update.message.reply_text("هدف نامعتبر است.")
+        return
+    cost = 18000
+    if COUNTRIES[country]["war_credit"] < cost:
+        await update.message.reply_text(f"نیاز به {cost:,} War Credit داری.")
+        return
+    COUNTRIES[country]["war_credit"] -= cost
+    t = COUNTRIES[target]
+    text = (
+        f"🕵️ گزارش جاسوسی از **{t['name']}**:\n"
+        f"قدرت تقریبی: {t['power']-4} تا {t['power']+6}\n"
+        f"تانک تقریبی: {int(t['equipment']['tanks']*0.85):,} ~ {int(t['equipment']['tanks']*1.15):,}\n"
+        f"جنگنده: حدود {int(t['equipment']['fighters']*0.9):,}\n"
+        f"ناو: حدود {t['equipment']['ships']}\n"
+        f"ذخیره نفت تقریبی: {int(t['stockpile']['oil']*0.75):,}\n"
+        f"در حال جنگ با: {', '.join(t.get('at_war_with', [])) or 'هیچ‌کس'}"
+    )
+    update_and_save()
+    await update.message.reply_text(text, parse_mode="Markdown")
+
+async def lend_lease(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    if len(context.args) < 3:
+        await update.message.reply_text("مثال: /lend_lease soviet tank 300")
+        return
+    target = context.args[0].lower()
+    item = context.args[1].lower()
+    try:
+        amount = int(context.args[2])
+    except:
+        await update.message.reply_text("تعداد باید عدد باشد.")
+        return
+    if target not in COUNTRIES or item not in ["tank", "fighter", "ship", "missile"]:
+        await update.message.reply_text("ورودی نامعتبر.")
+        return
+    key = {"tank": "tanks", "fighter": "fighters", "ship": "ships", "missile": "missiles"}[item]
+    if COUNTRIES[country]["equipment"].get(key, 0) < amount:
+        await update.message.reply_text("تجهیزات کافی نداری.")
+        return
+    COUNTRIES[country]["equipment"][key] -= amount
+    COUNTRIES[target]["equipment"][key] = COUNTRIES[target]["equipment"].get(key, 0) + amount
+    update_and_save()
+    await update.message.reply_text(f"✅ {amount} عدد {item} به {COUNTRIES[target]['name']} ارسال شد.")
+
+async def declare_war(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    if not context.args:
+        await update.message.reply_text("مثال: /declare_war soviet")
+        return
+    target = context.args[0].lower()
+    if target not in COUNTRIES or target == country:
+        await update.message.reply_text("هدف نامعتبر.")
+        return
+    if target not in COUNTRIES[country]["at_war_with"]:
+        COUNTRIES[country]["at_war_with"].append(target)
+    if country not in COUNTRIES[target]["at_war_with"]:
+        COUNTRIES[target]["at_war_with"].append(country)
+    update_and_save()
+    await update.message.reply_text(f"⚔️ جنگ بین {COUNTRIES[country]['name']} و {COUNTRIES[target]['name']} اعلام شد!")
+
+async def peace(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    if not context.args:
+        await update.message.reply_text("مثال: /peace germany")
+        return
+    target = context.args[0].lower()
+    if target in COUNTRIES[country].get("at_war_with", []):
+        COUNTRIES[country]["at_war_with"].remove(target)
+    if country in COUNTRIES[target].get("at_war_with", []):
+        COUNTRIES[target]["at_war_with"].remove(country)
+    update_and_save()
+    await update.message.reply_text(f"🕊️ پیمان صلح بین {COUNTRIES[country]['name']} و {COUNTRIES[target]['name']} برقرار شد.")
+
+async def land_attack(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await do_attack(update, context, "land")
+
+async def air_attack(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await do_attack(update, context, "air")
+
+async def naval_attack(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await do_attack(update, context, "naval")
+
+async def missile(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await do_attack(update, context, "missile")
+
+async def nuclear(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await do_attack(update, context, "nuclear")
+
+async def do_attack(update: Update, context: ContextTypes.DEFAULT_TYPE, attack_type: str):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    if not context.args:
+        await update.message.reply_text(f"مثال: /{attack_type}_attack germany" if attack_type in ["land","air","naval"] else f"/{attack_type} germany")
+        return
+    target = context.args[0].lower()
+    if target not in COUNTRIES or target == country:
+        await update.message.reply_text("هدف نامعتبر.")
         return
 
-    my_country = user_data[user_id]["country"]
-    my_data = COUNTRIES[my_country]
-    target_data = COUNTRIES[target]
+    my = COUNTRIES[country]
+    enemy = COUNTRIES[target]
 
-    if attack_type in ["atom", "nuclear"] and not my_data["nuclear"]:
-        await update.message.reply_text(
-            f"❌ کشور **{my_data['name']}** سلاح هسته‌ای عملیاتی ندارد.\n"
-            "در دوره جنگ جهانی دوم فقط آمریکا (از اوت ۱۹۴۵) این توانایی را داشت."
-        )
-        return
+    if attack_type == "nuclear":
+        if not my["nuclear"] or my["equipment"]["nukes"] < 1:
+            await update.message.reply_text("سلاح هسته‌ای در اختیار نداری.")
+            return
+        my["equipment"]["nukes"] -= 1
+        enemy["army"] = int(enemy["army"] * 0.55)
+        enemy["industry"] = max(10, enemy["industry"] - 25)
+        enemy["stockpile"]["oil"] = int(enemy["stockpile"]["oil"] * 0.4)
+        result = f"☢️ حمله هسته‌ای به {enemy['name']} انجام شد!\nتلفات فاجعه‌بار و نابودی گسترده صنعتی."
+    elif attack_type == "missile":
+        if my["equipment"]["missiles"] < 1:
+            await update.message.reply_text("موشک کافی نداری.")
+            return
+        used = min(15, my["equipment"]["missiles"])
+        my["equipment"]["missiles"] -= used
+        enemy["industry"] = max(10, enemy["industry"] - used // 2)
+        enemy["army"] = int(enemy["army"] * 0.97)
+        result = f"🚀 {used} موشک به {enemy['name']} شلیک شد. آسیب به صنعت و نیروها."
+    elif attack_type == "land":
+        my_power = my["equipment"]["tanks"] * 2 + my["army"] // 1000
+        enemy_power = enemy["equipment"]["tanks"] * 2 + enemy["army"] // 1000
+        if my_power > enemy_power * 1.2:
+            loss_my = random.randint(5, 12)
+            loss_en = random.randint(18, 35)
+            result = f"⚔️ پیروزی زمینی مقابل {enemy['name']}!\nتلفات شما: {loss_my}% | تلفات دشمن: {loss_en}%"
+            my["army"] = int(my["army"] * (1 - loss_my/100))
+            enemy["army"] = int(enemy["army"] * (1 - loss_en/100))
+            my["equipment"]["tanks"] = int(my["equipment"]["tanks"] * 0.92)
+            enemy["equipment"]["tanks"] = int(enemy["equipment"]["tanks"] * 0.75)
+        else:
+            loss_my = random.randint(15, 30)
+            loss_en = random.randint(8, 18)
+            result = f"⚔️ حمله زمینی به {enemy['name']} ناموفق بود.\nتلفات شما: {loss_my}% | تلفات دشمن: {loss_en}%"
+            my["army"] = int(my["army"] * (1 - loss_my/100))
+            enemy["army"] = int(enemy["army"] * (1 - loss_en/100))
+    elif attack_type == "air":
+        if my["equipment"]["fighters"] < 50:
+            await update.message.reply_text("جنگنده کافی نداری.")
+            return
+        used = min(200, my["equipment"]["fighters"] // 5)
+        my["equipment"]["fighters"] -= used // 4
+        enemy["industry"] = max(10, enemy["industry"] - 8)
+        enemy["stockpile"]["oil"] = int(enemy["stockpile"]["oil"] * 0.92)
+        result = f"✈️ حمله هوایی با {used} جنگنده به {enemy['name']} انجام شد. آسیب به صنعت و منابع."
+    elif attack_type == "naval":
+        if my["equipment"]["ships"] < 5:
+            await update.message.reply_text("ناو کافی نداری.")
+            return
+        my["equipment"]["ships"] = max(0, my["equipment"]["ships"] - random.randint(1, 4))
+        enemy["stockpile"]["oil"] = int(enemy["stockpile"]["oil"] * 0.88)
+        enemy["war_credit"] = int(enemy["war_credit"] * 0.95)
+        result = f"⚓ حمله دریایی به {enemy['name']} انجام شد. خطوط تأمین آسیب دید."
 
-    # شبیه‌سازی ساده و واقع‌گرایانه
-    if attack_type == "missile":
-        result = f"🚀 حمله موشکی از {my_data['name']} به {target_data['name']} انجام شد.\nآسیب متوسط به زیرساخت‌ها وارد شد."
-    elif attack_type == "atom":
-        result = (
-            f"☢️ بمب اتمی روی {target_data['name']} پرتاب شد!\n"
-            f"تلفات بسیار سنگین. شهر هدف تقریباً نابود شد.\n"
-            f"پیامدهای سیاسی و نظامی بسیار سنگین خواهد بود."
-        )
-    else:
-        result = (
-            f"💥 حمله هسته‌ای تمام‌عیار به {target_data['name']}!\n"
-            f"فاجعه انسانی و نابودی گسترده. این اقدام می‌تواند جنگ را به سطح جدیدی ببرد."
-        )
-
+    update_and_save()
     await update.message.reply_text(result)
 
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "دستورات موجود:\n"
-        "/start\n"
-        "/country_set [کشور]\n"
-        "/country_info\n"
-        "/missile [کشور]\n"
-        "/atom [کشور]\n"
-        "/nuclear [کشور]\n"
-        "/help"
-    )
+async def occupy(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    if not context.args:
+        await update.message.reply_text("مثال: /occupy italy")
+        return
+    target = context.args[0].lower()
+    if target not in COUNTRIES:
+        await update.message.reply_text("کشور معتبر نیست.")
+        return
+    if COUNTRIES[target]["army"] > COUNTRIES[country]["army"] * 0.35:
+        await update.message.reply_text("هنوز قدرت نظامی دشمن برای تصرف کافی پایین نیامده.")
+        return
+    COUNTRIES[target]["occupied_by"] = country
+    COUNTRIES[target]["army"] = int(COUNTRIES[target]["army"] * 0.3)
+    # غنیمت
+    COUNTRIES[country]["war_credit"] += COUNTRIES[target]["war_credit"] // 3
+    COUNTRIES[target]["war_credit"] = COUNTRIES[target]["war_credit"] // 3
+    update_and_save()
+    await update.message.reply_text(f"🏴 کشور {COUNTRIES[target]['name']} توسط شما تصرف شد!")
 
-# ----------------- اجرای ربات -----------------
+async def sanction(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    if not context.args:
+        await update.message.reply_text("مثال: /sanction japan")
+        return
+    target = context.args[0].lower()
+    if target not in COUNTRIES:
+        await update.message.reply_text("کشور معتبر نیست.")
+        return
+    if target not in COUNTRIES[country]["sanctions"]:
+        COUNTRIES[country]["sanctions"].append(target)
+    update_and_save()
+    await update.message.reply_text(f"🚫 تحریم علیه {COUNTRIES[target]['name']} اعمال شد.")
+
+async def blockade(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    if not context.args:
+        await update.message.reply_text("مثال: /blockade japan")
+        return
+    target = context.args[0].lower()
+    if COUNTRIES[country]["equipment"]["ships"] < 15:
+        await update.message.reply_text("حداقل ۱۵ ناو برای محاصره نیاز است.")
+        return
+    if target not in COUNTRIES[country]["blockades"]:
+        COUNTRIES[country]["blockades"].append(target)
+    update_and_save()
+    await update.message.reply_text(f"⚓ محاصره دریایی علیه {COUNTRIES[target]['name']} آغاز شد.")
+
+# ==================== اجرای ربات ====================
 def main():
     app = Application.builder().token(BOT_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
     app.add_handler(CommandHandler("country_set", country_set))
     app.add_handler(CommandHandler("country_info", country_info))
+    app.add_handler(CommandHandler("status", status))
+    app.add_handler(CommandHandler("economy", economy))
+    app.add_handler(CommandHandler("army", army))
+    app.add_handler(CommandHandler("market", market))
+    app.add_handler(CommandHandler("buy", buy))
+    app.add_handler(CommandHandler("sell", sell))
+    app.add_handler(CommandHandler("build_factory", build_factory))
+    app.add_handler(CommandHandler("spy", spy))
+    app.add_handler(CommandHandler("lend_lease", lend_lease))
+    app.add_handler(CommandHandler("declare_war", declare_war))
+    app.add_handler(CommandHandler("peace", peace))
+    app.add_handler(CommandHandler("land_attack", land_attack))
+    app.add_handler(CommandHandler("air_attack", air_attack))
+    app.add_handler(CommandHandler("naval_attack", naval_attack))
     app.add_handler(CommandHandler("missile", missile))
-    app.add_handler(CommandHandler("atom", atom))
     app.add_handler(CommandHandler("nuclear", nuclear))
-    app.add_handler(CommandHandler("help", help_command))
+    app.add_handler(CommandHandler("occupy", occupy))
+    app.add_handler(CommandHandler("sanction", sanction))
+    app.add_handler(CommandHandler("blockade", blockade))
 
-    print("ربات در حال اجرا است...")
+    print("ربات جنگ جهانی با موفقیت اجرا شد...")
     app.run_polling()
 
 if __name__ == "__main__":
