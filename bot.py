@@ -1,9 +1,9 @@
-import asyncio
 import os
 import random
 from datetime import datetime, timedelta
 from telegram import Update, ChatMember, ChatPermissions, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, CallbackQueryHandler
+import pytz
 
 # ==================== بارگذاری متغیرهای محیطی ====================
 
@@ -34,7 +34,7 @@ async def is_admin(update: Update, user_id: int) -> bool:
 
 async def is_owner(update: Update,user_id: int) -> bool:
     try:
-        chat_membet = await update.effective_chat.get_member(user_id)
+        chat_member = await update.effective_chat.get_member(user_id)
         return chat_member.status in [ChatMember.OWNER]
     except:
         return False
@@ -328,10 +328,12 @@ async def coin_flip(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     await update.message.reply_text(text, parse_mode='Markdown')
 
-# ==================== دستور /time ====================
+# ==================== دستور های کاربردی ====================
 
+# /time
 async def get_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    now = datetime.now()
+    time_zone = pytz.timezone("Asia/Tehran")
+    now = datetime.now(time_zone)
     persian_weekdays = {0: "دوشنبه", 1: "سه‌شنبه", 2: "چهارشنبه", 3: "پنج‌شنبه", 4: "جمعه", 5: "شنبه", 6: "یک‌شنبه"}
     weekday = persian_weekdays[now.weekday()]
     
@@ -344,7 +346,9 @@ async def get_time(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"📊 روز سال: {now.timetuple().tm_yday}"
     )
     await update.message.reply_text(text, parse_mode='Markdown')
-
+# /date
+async def get_date(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    msg = update.effective_message
 # ==================== دستورات مدیریتی ====================
 
 # /ban
