@@ -741,80 +741,96 @@ async def declare_war(update: Update, context: ContextTypes.DEFAULT_TYPE):
     update_and_save()
     await update.message.reply_text(f"⚔️ جنگ بین {COUNTRIES[country]['name']} و {COUNTRIES[target]['name']} اعلام شد!")
 
-async def getfactoryitems(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def factory_collect(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
     country = get_user_country(uid)
 
     if not country:
-        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        await update.message.reply_text("❌ اول باید کشور خودت را انتخاب کنی.")
         return
+
     c = COUNTRIES[country]
 
     if c.get("occupied_by"):
-        await update.message.reply_text("کشور شما اشغال شده و نمیتونی تولیدات کارخونه هاتو جمع کنی")
+        await update.message.reply_text("❌ کشور شما اشغال شده و نمی‌توانید تولیدات کارخانه را جمع کنید.")
         return
+
     factories = c.get("factories", [])
     if not factories:
-        await update.message.reply_text("کشور شما هیچ کارخانه ای نداره\nبا دستور /build_factory یدونه بساز")
-        return
-    now = time.time()
-    last_factory_collect = c.get("last_factory_collect", 0)
-    cooldown = 15 * 60
-    remaining = int(cooldown - (now - last_factory_collect))
-    if remaining > 0:
-        min = remaining // 60
-        sec = remaining % 60
         await update.message.reply_text(
-            f"کارخونه هات تولید نکردن"
-            f"باید {min} دقیقه و {sec} ثانیه صبر کنی"
+            "❌ شما هنوز هیچ کارخانه‌ای نساخته‌اید.\n"
+            "با دستور /build_factory کارخانه بسازید."
         )
         return
+
+    now = time.time()
+    last_factory_collect = c.get("last_factory_collect", 0)
+    cooldown = 30 * 60  # ۳۰ دقیقه
+
+    remaining = int(cooldown - (now - last_factory_collect))
+    if remaining > 0:
+        minutes = remaining // 60
+        seconds = remaining % 60
+        await update.message.reply_text(
+            f"⏳ هنوز زود است!\n"
+            f"باید {minutes} دقیقه و {seconds} ثانیه صبر کنی."
+        )
+        return
+
+    # شمارش تعداد هر نوع کارخانه
     factory_count = {}
     for f in factories:
         ftype = f["type"]
         factory_count[ftype] = factory_count.get(ftype, 0) + 1
 
-        gain_equ = {"tanks": 0, "fighters": 0, "ships": 0}
-        gain_res = {"steel": 0, "oil":0, "uranium":0}
-        text_lines = []
+    # محاسبه تولیدات
+    gained_equipment = {"tanks": 0, "fighters": 0, "ships": 0}
+    gained_resources = {"steel": 0, "oil": 0, "uranium": 0}
+    text_lines = []
 
-        for ftype, count in factory_count.items():
-            if ftype == "tank":
-                amount = count * 20
-                gain_equ["tanks"] += amount
-                text_lines.append(f"+ {amount} tank")
-            elif ftype == "aircraft":
-                amount = count * 20
-                gain_equ["fighters"] += amount
-                text_lines.append(f"+ {amount} aircraft")
-            elif ftype == "shipyard":
-                amount = count * 20
-                gain_equ["ships"] += amount
-                text_lines.append(f"+ {amount} ships")
-            elif ftype == "steel":
-                amount = count * 20
-                gain_res["steel"] += amount
-                text_lines.append(f"+ {amount} steel")
-            elif ftype == "oil":
-                amount = count * 20
-                gain_res["oil"] += amount
-                text_lines.append(f"+ {amount} oil")
-            elif ftype == "uranium":
-                amount = count * 20
-                gain_res["uranium"] += amount
-                text_lines.append(f"+ {amount} uranium")
-        for item, amount in gain_equ.items():
-            if amount > 0:
-                c["equipment"][item] = c["equipment"].get(item, 0) + amount
-        for res, amount in gain_res.items():
-            if amount > 0:
-                c["stockpile"][res] = c["stockpile"].get(res, 0) + amount
-        c["last_factory_collect"] = now
-        update_and_save()
-        text = f"تولیدات کارخانه های {c['name']} جمع آوری شد\n\n"
-        text += f"".join(text_lines)
-        text += f"میتونی 30 دقیقه دیکه دوباره جمع کنی"
-        await update.message.reply_text(text)
+    for ftype, count in factory_count.items():
+        if ftype == "tank":
+            amount = count * 35
+            gained_equipment["tanks"] += amount
+            text_lines.append(f"• تانک: +{amount}")
+        elif ftype == "aircraft":
+            amount = count * 40
+            gained_equipment["fighters"] += amount
+            text_lines.append(f"• جنگنده: +{amount}")
+        elif ftype == "shipyard":
+            amount = count * 1
+            gained_equipment["ships"] += amount
+            text_lines.append(f"• ناو: +{amount}")
+        elif ftype == "steel":
+            amount = count * 1800
+            gained_resources["steel"] += amount
+            text_lines.append(f"• فولاد: +{amount:,}")
+        elif ftype == "oil":
+            amount = count * 2200
+            gained_resources["oil"] += amount
+            text_lines.append(f"• نفت: +{amount:,}")
+        elif ftype == "uranium":
+            amount = count * 25
+            gained_resources["uranium"] += amount
+            text_lines.append(f"• اورانیوم: +{amount}")
+
+    # اضافه کردن به موجودی
+    for item, amount in gained_equipment.items():
+        if amount > 0:
+            c["equipment"][item] = c["equipment"].get(item, 0) + amount
+
+    for res, amount in gained_resources.items():
+        if amount > 0:
+            c["stockpile"][res] = c["stockpile"].get(res, 0) + amount
+
+    c["last_factory_collect"] = now
+    update_and_save()
+
+    text = f"🏭 **تولیدات کارخانه‌های {c['name']} جمع‌آوری شد:**\n\n"
+    text += "\n".join(text_lines)
+    text += "\n\nمی‌توانی ۳۰ دقیقه دیگر دوباره جمع کنی."
+
+    await update.message.reply_text(text, parse_mode="Markdown")
 
 async def peace(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
@@ -1043,7 +1059,7 @@ def main():
     app.add_handler(CommandHandler("sanction", sanction))
     app.add_handler(CommandHandler("blockade", blockade))
     app.add_handler(CommandHandler("factories", factories))
-    app.add_handler(CommandHandler("factory_collect", getfactoryitems))  # برای املای اشتباه هم کار کند
+    app.add_handler(CommandHandler("factory_collect", factory_collect))  # برای املای اشتباه هم کار کند
 
     print("ربات جنگ جهانی با موفقیت اجرا شد...")
     app.run_polling()
