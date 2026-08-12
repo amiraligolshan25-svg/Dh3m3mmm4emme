@@ -33,6 +33,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 18000, "steel": 22000, "coal": 85000, "food": 42000, "rubber": 3200, "aluminum": 1800, "uranium": 120},
         "stockpile": {"oil": 45000, "steel": 38000, "coal": 120000, "food": 65000, "rubber": 8000, "aluminum": 4500, "uranium": 280},
@@ -56,6 +57,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 185000, "steel": 85000, "coal": 550000, "food": 180000, "rubber": 12000, "aluminum": 9500, "uranium": 850},
         "stockpile": {"oil": 320000, "steel": 150000, "coal": 700000, "food": 250000, "rubber": 28000, "aluminum": 22000, "uranium": 1600},
@@ -79,6 +81,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 95000, "steel": 42000, "coal": 180000, "food": 78000, "rubber": 1800, "aluminum": 3200, "uranium": 420},
         "stockpile": {"oil": 140000, "steel": 65000, "coal": 250000, "food": 95000, "rubber": 3500, "aluminum": 5800, "uranium": 780},
@@ -102,6 +105,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 12000, "steel": 18000, "coal": 210000, "food": 28000, "rubber": 4500, "aluminum": 2100, "uranium": 90},
         "stockpile": {"oil": 35000, "steel": 28000, "coal": 280000, "food": 42000, "rubber": 9000, "aluminum": 4800, "uranium": 160},
@@ -125,6 +129,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 8500, "steel": 9500, "coal": 42000, "food": 38000, "rubber": 2800, "aluminum": 1100, "uranium": 45},
         "stockpile": {"oil": 18000, "steel": 15000, "coal": 55000, "food": 48000, "rubber": 5500, "aluminum": 2400, "uranium": 80},
@@ -148,6 +153,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 4500, "steel": 6200, "coal": 18000, "food": 22000, "rubber": 900, "aluminum": 650, "uranium": 20},
         "stockpile": {"oil": 9000, "steel": 11000, "coal": 28000, "food": 30000, "rubber": 1800, "aluminum": 1200, "uranium": 35},
@@ -171,6 +177,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 52000, "steel": 1400, "coal": 900, "food": 19000, "rubber": 220, "aluminum": 180, "uranium": 15},
         "stockpile": {"oil": 78000, "steel": 3200, "coal": 1600, "food": 27000, "rubber": 500, "aluminum": 380, "uranium": 40},
@@ -194,6 +201,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 28000, "steel": 3200, "coal": 9500, "food": 42000, "rubber": 8500, "aluminum": 900, "uranium": 25},
         "stockpile": {"oil": 45000, "steel": 5800, "coal": 14000, "food": 55000, "rubber": 12000, "aluminum": 1600, "uranium": 45},
@@ -217,6 +225,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 1800, "steel": 2800, "coal": 22000, "food": 9500, "rubber": 150, "aluminum": 400, "uranium": 180},
         "stockpile": {"oil": 3200, "steel": 4500, "coal": 35000, "food": 12000, "rubber": 280, "aluminum": 650, "uranium": 320},
@@ -240,6 +249,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 400, "steel": 350, "coal": 1200, "food": 8500, "rubber": 40, "aluminum": 60, "uranium": 15},
         "stockpile": {"oil": 800, "steel": 600, "coal": 2000, "food": 11000, "rubber": 80, "aluminum": 100, "uranium": 25},
@@ -263,6 +273,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 18000, "steel": 28000, "coal": 180000, "food": 160000, "rubber": 1200, "aluminum": 4500, "uranium": 220},
         "stockpile": {"oil": 32000, "steel": 45000, "coal": 250000, "food": 210000, "rubber": 2200, "aluminum": 7800, "uranium": 380},
@@ -286,6 +297,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 8500, "steel": 12000, "coal": 65000, "food": 95000, "rubber": 2800, "aluminum": 2200, "uranium": 95},
         "stockpile": {"oil": 15000, "steel": 22000, "coal": 95000, "food": 130000, "rubber": 4500, "aluminum": 3800, "uranium": 160},
@@ -309,6 +321,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 1200, "steel": 1800, "coal": 800, "food": 6500, "rubber": 180, "aluminum": 450, "uranium": 35},
         "stockpile": {"oil": 2800, "steel": 3200, "coal": 1500, "food": 9500, "rubber": 350, "aluminum": 800, "uranium": 60},
@@ -332,6 +345,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 145000, "steel": 800, "coal": 300, "food": 4800, "rubber": 50, "aluminum": 120, "uranium": 10},
         "stockpile": {"oil": 280000, "steel": 1500, "coal": 600, "food": 7500, "rubber": 100, "aluminum": 250, "uranium": 20},
@@ -355,6 +369,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 6500, "steel": 8500, "coal": 48000, "food": 38000, "rubber": 400, "aluminum": 1800, "uranium": 280},
         "stockpile": {"oil": 12000, "steel": 15000, "coal": 75000, "food": 52000, "rubber": 800, "aluminum": 3200, "uranium": 450},
@@ -446,23 +461,49 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await start(update, context)
-
+    
 async def country_set(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
-    if not context.args:
-        await update.message.reply_text("مثال: /country_set germany\nکشورهای موجود: " + ", ".join(COUNTRIES.keys()))
-        return
-    country = context.args[0].lower()
-    if country not in COUNTRIES:
-        await update.message.reply_text("کشور معتبر نیست.")
-        return
-    if COUNTRIES[country].get("occupied_by"):
-        await update.message.reply_text("این کشور در حال حاضر اشغال شده است.")
-        return
-    user_data[uid] = {"country": country}
-    update_and_save()
-    await update.message.reply_text(f"✅ کشور شما روی **{COUNTRIES[country]['name']}** تنظیم شد.", parse_mode="Markdown")
 
+    # اگر قبلاً کشور انتخاب کرده، اجازه تغییر نده
+    if uid in user_data and "country" in user_data[uid]:
+        current = user_data[uid]["country"]
+        await update.message.reply_text(
+            f"❌ شما قبلاً کشور **{COUNTRIES[current]['name']}** را انتخاب کرده‌اید.\n"
+            f"امکان تغییر کشور وجود ندارد."
+        )
+        return
+
+    if not context.args:
+        taken = [c for c, data in COUNTRIES.items() if data.get("taken_by")]
+        available = [c for c in COUNTRIES.keys() if c not in taken]
+        await update.message.reply_text(
+            "مثال: /country_set germany\n\n"
+            f"کشورهای آزاد: {', '.join(available) if available else 'هیچ کشوری آزاد نیست'}"
+        )
+        return
+
+    country = context.args[0].lower().strip()
+    if country not in COUNTRIES:
+        await update.message.reply_text("❌ کشور معتبر نیست.")
+        return
+
+    # چک کن کسی این کشور را نگرفته باشد
+    if COUNTRIES[country].get("taken_by"):
+        await update.message.reply_text(
+            f"❌ کشور **{COUNTRIES[country]['name']}** قبلاً توسط شخص دیگری انتخاب شده است."
+        )
+        return
+
+    # ثبت کشور
+    user_data[uid] = {"country": country}
+    COUNTRIES[country]["taken_by"] = uid
+    update_and_save()
+    
+    await update.message.reply_text(
+        f"✅ کشور شما با موفقیت روی **{COUNTRIES[country]['name']}** تنظیم شد.\n"
+        f"دیگر امکان تغییر کشور وجود ندارد."
+    )
 async def country_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
     country = get_user_country(uid)
