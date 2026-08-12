@@ -765,7 +765,7 @@ async def factory_collect(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     now = time.time()
     last_factory_collect = c.get("last_factory_collect", 0)
-    cooldown = 30 * 60  # ۳۰ دقیقه
+    cooldown = 60 * 8
 
     remaining = int(cooldown - (now - last_factory_collect))
     if remaining > 0:
@@ -828,7 +828,7 @@ async def factory_collect(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     text = f"🏭 **تولیدات کارخانه‌های {c['name']} جمع‌آوری شد:**\n\n"
     text += "\n".join(text_lines)
-    text += "\n\nمی‌توانی ۳۰ دقیقه دیگر دوباره جمع کنی."
+    text += "\n\nمی‌توانی ۸ دقیقه دیگر دوباره جمع کنی."
 
     await update.message.reply_text(text, parse_mode="Markdown")
 
