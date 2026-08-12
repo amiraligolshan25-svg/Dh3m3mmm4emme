@@ -31,6 +31,7 @@ DEFAULT_COUNTRIES = {
         "allies": ["italy", "japan"],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 18000, "steel": 22000, "coal": 85000, "food": 42000, "rubber": 3200, "aluminum": 1800, "uranium": 120},
         "stockpile": {"oil": 45000, "steel": 38000, "coal": 120000, "food": 65000, "rubber": 8000, "aluminum": 4500, "uranium": 280},
         "production": {"tanks": 1200, "planes": 1800, "ships": 8, "guns": 45000, "ammo": 120000},
@@ -52,6 +53,7 @@ DEFAULT_COUNTRIES = {
         "allies": ["uk", "soviet"],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 185000, "steel": 85000, "coal": 550000, "food": 180000, "rubber": 12000, "aluminum": 9500, "uranium": 850},
         "stockpile": {"oil": 320000, "steel": 150000, "coal": 700000, "food": 250000, "rubber": 28000, "aluminum": 22000, "uranium": 1600},
         "production": {"tanks": 2800, "planes": 6500, "ships": 35, "guns": 98000, "ammo": 320000},
@@ -73,6 +75,7 @@ DEFAULT_COUNTRIES = {
         "allies": [],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 95000, "steel": 42000, "coal": 180000, "food": 78000, "rubber": 1800, "aluminum": 3200, "uranium": 420},
         "stockpile": {"oil": 140000, "steel": 65000, "coal": 250000, "food": 95000, "rubber": 3500, "aluminum": 5800, "uranium": 780},
         "production": {"tanks": 2200, "planes": 3100, "ships": 6, "guns": 72000, "ammo": 210000},
@@ -94,6 +97,7 @@ DEFAULT_COUNTRIES = {
         "allies": ["usa"],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 12000, "steel": 18000, "coal": 210000, "food": 28000, "rubber": 4500, "aluminum": 2100, "uranium": 90},
         "stockpile": {"oil": 35000, "steel": 28000, "coal": 280000, "food": 42000, "rubber": 9000, "aluminum": 4800, "uranium": 160},
         "production": {"tanks": 650, "planes": 2200, "ships": 18, "guns": 38000, "ammo": 95000},
@@ -115,6 +119,7 @@ DEFAULT_COUNTRIES = {
         "allies": ["germany", "italy"],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 8500, "steel": 9500, "coal": 42000, "food": 38000, "rubber": 2800, "aluminum": 1100, "uranium": 45},
         "stockpile": {"oil": 18000, "steel": 15000, "coal": 55000, "food": 48000, "rubber": 5500, "aluminum": 2400, "uranium": 80},
         "production": {"tanks": 280, "planes": 1600, "ships": 12, "guns": 22000, "ammo": 65000},
@@ -136,6 +141,7 @@ DEFAULT_COUNTRIES = {
         "allies": ["germany", "japan"],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 4500, "steel": 6200, "coal": 18000, "food": 22000, "rubber": 900, "aluminum": 650, "uranium": 20},
         "stockpile": {"oil": 9000, "steel": 11000, "coal": 28000, "food": 30000, "rubber": 1800, "aluminum": 1200, "uranium": 35},
         "production": {"tanks": 180, "planes": 650, "ships": 5, "guns": 14000, "ammo": 38000},
@@ -157,6 +163,7 @@ DEFAULT_COUNTRIES = {
         "allies": [],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 52000, "steel": 1400, "coal": 900, "food": 19000, "rubber": 220, "aluminum": 180, "uranium": 15},
         "stockpile": {"oil": 78000, "steel": 3200, "coal": 1600, "food": 27000, "rubber": 500, "aluminum": 380, "uranium": 40},
         "production": {"tanks": 8, "planes": 12, "ships": 0, "guns": 1500, "ammo": 9000},
@@ -178,6 +185,7 @@ DEFAULT_COUNTRIES = {
         "allies": [],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 28000, "steel": 3200, "coal": 9500, "food": 42000, "rubber": 8500, "aluminum": 900, "uranium": 25},
         "stockpile": {"oil": 45000, "steel": 5800, "coal": 14000, "food": 55000, "rubber": 12000, "aluminum": 1600, "uranium": 45},
         "production": {"tanks": 45, "planes": 80, "ships": 4, "guns": 6500, "ammo": 28000},
@@ -199,6 +207,7 @@ DEFAULT_COUNTRIES = {
         "allies": [],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 1800, "steel": 2800, "coal": 22000, "food": 9500, "rubber": 150, "aluminum": 400, "uranium": 180},
         "stockpile": {"oil": 3200, "steel": 4500, "coal": 35000, "food": 12000, "rubber": 280, "aluminum": 650, "uranium": 320},
         "production": {"tanks": 90, "planes": 60, "ships": 2, "guns": 12000, "ammo": 45000},
@@ -220,6 +229,7 @@ DEFAULT_COUNTRIES = {
         "allies": [],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 400, "steel": 350, "coal": 1200, "food": 8500, "rubber": 40, "aluminum": 60, "uranium": 15},
         "stockpile": {"oil": 800, "steel": 600, "coal": 2000, "food": 11000, "rubber": 80, "aluminum": 100, "uranium": 25},
         "production": {"tanks": 2, "planes": 5, "ships": 0, "guns": 1800, "ammo": 6000},
@@ -241,6 +251,7 @@ DEFAULT_COUNTRIES = {
         "allies": [],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 18000, "steel": 28000, "coal": 180000, "food": 160000, "rubber": 1200, "aluminum": 4500, "uranium": 220},
         "stockpile": {"oil": 32000, "steel": 45000, "coal": 250000, "food": 210000, "rubber": 2200, "aluminum": 7800, "uranium": 380},
         "production": {"tanks": 450, "planes": 380, "ships": 6, "guns": 55000, "ammo": 180000},
@@ -262,6 +273,7 @@ DEFAULT_COUNTRIES = {
         "allies": [],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 8500, "steel": 12000, "coal": 65000, "food": 95000, "rubber": 2800, "aluminum": 2200, "uranium": 95},
         "stockpile": {"oil": 15000, "steel": 22000, "coal": 95000, "food": 130000, "rubber": 4500, "aluminum": 3800, "uranium": 160},
         "production": {"tanks": 180, "planes": 220, "ships": 5, "guns": 28000, "ammo": 95000},
@@ -283,6 +295,7 @@ DEFAULT_COUNTRIES = {
         "allies": [],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 1200, "steel": 1800, "coal": 800, "food": 6500, "rubber": 180, "aluminum": 450, "uranium": 35},
         "stockpile": {"oil": 2800, "steel": 3200, "coal": 1500, "food": 9500, "rubber": 350, "aluminum": 800, "uranium": 60},
         "production": {"tanks": 85, "planes": 120, "ships": 2, "guns": 8500, "ammo": 32000},
@@ -304,6 +317,7 @@ DEFAULT_COUNTRIES = {
         "allies": [],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 145000, "steel": 800, "coal": 300, "food": 4800, "rubber": 50, "aluminum": 120, "uranium": 10},
         "stockpile": {"oil": 280000, "steel": 1500, "coal": 600, "food": 7500, "rubber": 100, "aluminum": 250, "uranium": 20},
         "production": {"tanks": 15, "planes": 25, "ships": 1, "guns": 2200, "ammo": 9000},
@@ -325,6 +339,7 @@ DEFAULT_COUNTRIES = {
         "allies": ["uk", "usa"],
         "sanctions": [],
         "blockades": [],
+        "factories": [],
         "resources": {"oil": 6500, "steel": 8500, "coal": 48000, "food": 38000, "rubber": 400, "aluminum": 1800, "uranium": 280},
         "stockpile": {"oil": 12000, "steel": 15000, "coal": 75000, "food": 52000, "rubber": 800, "aluminum": 3200, "uranium": 450},
         "production": {"tanks": 95, "planes": 280, "ships": 6, "guns": 14000, "ammo": 48000},
@@ -573,39 +588,66 @@ async def sell(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def build_factory(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
     country = get_user_country(uid)
+    
     if not country:
-        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        await update.message.reply_text("❌ اول باید کشور خودت را انتخاب کنی.")
         return
+
     if not context.args:
-        text = "کارخانه‌های قابل ساخت:\n"
+        text = "🏭 کارخانه‌های قابل ساخت:\n\n"
         for k, v in FACTORY_COST.items():
-            text += f"• {k}: {v:,} War Credit\n"
-        await update.message.reply_text(text)
+            text += f"• `{k}` → {v:,} War Credit\n"
+        text += "\nمثال: /build_factory tank"
+        await update.message.reply_text(text, parse_mode="Markdown")
         return
-    ftype = context.args[0].lower()
+
+    ftype = context.args[0].lower().strip()
+    
     if ftype not in FACTORY_COST:
-        await update.message.reply_text("نوع کارخانه نامعتبر است.")
+        await update.message.reply_text("❌ نوع کارخانه معتبر نیست.")
         return
+
     cost = FACTORY_COST[ftype]
-    if COUNTRIES[country]["war_credit"] < cost:
-        await update.message.reply_text(f"پول کافی نیست. هزینه: {cost:,}")
+    c = COUNTRIES[country]
+
+    if c["war_credit"] < cost:
+        await update.message.reply_text(f"❌ War Credit کافی نیست.\nهزینه: {cost:,}")
         return
-    COUNTRIES[country]["war_credit"] -= cost
-    COUNTRIES[country]["industry"] = min(100, COUNTRIES[country]["industry"] + 5)
+
+    # کم کردن پول
+    c["war_credit"] -= cost
+    c["industry"] = min(100, c["industry"] + 5)
+
+    # افزایش تولید
     if ftype == "tank":
-        COUNTRIES[country]["production"]["tanks"] += 200
+        c["production"]["tanks"] += 200
     elif ftype == "aircraft":
-        COUNTRIES[country]["production"]["planes"] += 250
+        c["production"]["planes"] += 250
     elif ftype == "shipyard":
-        COUNTRIES[country]["production"]["ships"] += 4
+        c["production"]["ships"] += 4
     elif ftype == "steel":
-        COUNTRIES[country]["resources"]["steel"] += 3000
+        c["resources"]["steel"] += 3000
     elif ftype == "oil":
-        COUNTRIES[country]["resources"]["oil"] += 5000
+        c["resources"]["oil"] += 5000
     elif ftype == "uranium":
-        COUNTRIES[country]["resources"]["uranium"] += 80
+        c["resources"]["uranium"] += 80
+
+    # ذخیره در لیست کارخانه‌ها
+    if "factories" not in c:
+        c["factories"] = []
+    
+    c["factories"].append({
+        "type": ftype,
+        "built_at": time.time()
+    })
+
     update_and_save()
-    await update.message.reply_text(f"🏭 کارخانه {ftype} ساخته شد! صنعت افزایش یافت.")
+
+    await update.message.reply_text(
+        f"🏭 کارخانه **{ftype}** با موفقیت ساخته شد!\n"
+        f"هزینه: {cost:,} War Credit\n"
+        f"تعداد کل کارخانه‌های شما: {len(c['factories'])}"
+    )
 
 async def spy(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
@@ -854,7 +896,37 @@ async def blockade(update: Update, context: ContextTypes.DEFAULT_TYPE):
         COUNTRIES[country]["blockades"].append(target)
     update_and_save()
     await update.message.reply_text(f"⚓ محاصره دریایی علیه {COUNTRIES[target]['name']} آغاز شد.")
+async def factories(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
 
+    if not country:
+        await update.message.reply_text("❌ اول باید کشور خودت را انتخاب کنی.")
+        return
+
+    c = COUNTRIES[country]
+    factory_list = c.get("factories", [])
+
+    if not factory_list:
+        await update.message.reply_text(
+            f"🏭 کشور **{c['name']}** هنوز هیچ کارخانه‌ای نساخته است.\n"
+            f"با دستور /build_factory می‌توانی کارخانه بسازی."
+        )
+        return
+
+    # شمارش تعداد هر نوع کارخانه
+    count = {}
+    for f in factory_list:
+        ftype = f["type"]
+        count[ftype] = count.get(ftype, 0) + 1
+
+    text = f"🏭 **کارخانه‌های {c['name']}**\n\n"
+    text += f"تعداد کل: {len(factory_list)}\n\n"
+
+    for ftype, amount in count.items():
+        text += f"• {ftype}: {amount} عدد\n"
+
+    await update.message.reply_text(text, parse_mode="Markdown")
 # ==================== اجرای ربات ====================
 def main():
     app = Application.builder().token(BOT_TOKEN).build()
@@ -882,6 +954,8 @@ def main():
     app.add_handler(CommandHandler("occupy", occupy))
     app.add_handler(CommandHandler("sanction", sanction))
     app.add_handler(CommandHandler("blockade", blockade))
+    app.add_handler(CommandHandler("factories", factories))
+    app.add_handler(CommandHandler("factorys", factories))  # برای املای اشتباه هم کار کند
 
     print("ربات جنگ جهانی با موفقیت اجرا شد...")
     app.run_polling()
