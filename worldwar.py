@@ -4,10 +4,10 @@
 import json
 import os
 import random
-import time
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 from dotenv import load_dotenv
+import time
 
 load_dotenv()
 # ----------------- تنظیمات -----------------
@@ -33,6 +33,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 18000, "steel": 22000, "coal": 85000, "food": 42000, "rubber": 3200, "aluminum": 1800, "uranium": 120},
         "stockpile": {"oil": 45000, "steel": 38000, "coal": 120000, "food": 65000, "rubber": 8000, "aluminum": 4500, "uranium": 280},
         "production": {"tanks": 1200, "planes": 1800, "ships": 8, "guns": 45000, "ammo": 120000},
@@ -55,6 +56,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 185000, "steel": 85000, "coal": 550000, "food": 180000, "rubber": 12000, "aluminum": 9500, "uranium": 850},
         "stockpile": {"oil": 320000, "steel": 150000, "coal": 700000, "food": 250000, "rubber": 28000, "aluminum": 22000, "uranium": 1600},
         "production": {"tanks": 2800, "planes": 6500, "ships": 35, "guns": 98000, "ammo": 320000},
@@ -77,6 +79,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 95000, "steel": 42000, "coal": 180000, "food": 78000, "rubber": 1800, "aluminum": 3200, "uranium": 420},
         "stockpile": {"oil": 140000, "steel": 65000, "coal": 250000, "food": 95000, "rubber": 3500, "aluminum": 5800, "uranium": 780},
         "production": {"tanks": 2200, "planes": 3100, "ships": 6, "guns": 72000, "ammo": 210000},
@@ -99,6 +102,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 12000, "steel": 18000, "coal": 210000, "food": 28000, "rubber": 4500, "aluminum": 2100, "uranium": 90},
         "stockpile": {"oil": 35000, "steel": 28000, "coal": 280000, "food": 42000, "rubber": 9000, "aluminum": 4800, "uranium": 160},
         "production": {"tanks": 650, "planes": 2200, "ships": 18, "guns": 38000, "ammo": 95000},
@@ -121,6 +125,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 8500, "steel": 9500, "coal": 42000, "food": 38000, "rubber": 2800, "aluminum": 1100, "uranium": 45},
         "stockpile": {"oil": 18000, "steel": 15000, "coal": 55000, "food": 48000, "rubber": 5500, "aluminum": 2400, "uranium": 80},
         "production": {"tanks": 280, "planes": 1600, "ships": 12, "guns": 22000, "ammo": 65000},
@@ -143,6 +148,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 4500, "steel": 6200, "coal": 18000, "food": 22000, "rubber": 900, "aluminum": 650, "uranium": 20},
         "stockpile": {"oil": 9000, "steel": 11000, "coal": 28000, "food": 30000, "rubber": 1800, "aluminum": 1200, "uranium": 35},
         "production": {"tanks": 180, "planes": 650, "ships": 5, "guns": 14000, "ammo": 38000},
@@ -165,6 +171,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 52000, "steel": 1400, "coal": 900, "food": 19000, "rubber": 220, "aluminum": 180, "uranium": 15},
         "stockpile": {"oil": 78000, "steel": 3200, "coal": 1600, "food": 27000, "rubber": 500, "aluminum": 380, "uranium": 40},
         "production": {"tanks": 8, "planes": 12, "ships": 0, "guns": 1500, "ammo": 9000},
@@ -187,6 +194,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 28000, "steel": 3200, "coal": 9500, "food": 42000, "rubber": 8500, "aluminum": 900, "uranium": 25},
         "stockpile": {"oil": 45000, "steel": 5800, "coal": 14000, "food": 55000, "rubber": 12000, "aluminum": 1600, "uranium": 45},
         "production": {"tanks": 45, "planes": 80, "ships": 4, "guns": 6500, "ammo": 28000},
@@ -209,6 +217,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 1800, "steel": 2800, "coal": 22000, "food": 9500, "rubber": 150, "aluminum": 400, "uranium": 180},
         "stockpile": {"oil": 3200, "steel": 4500, "coal": 35000, "food": 12000, "rubber": 280, "aluminum": 650, "uranium": 320},
         "production": {"tanks": 90, "planes": 60, "ships": 2, "guns": 12000, "ammo": 45000},
@@ -231,6 +240,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 400, "steel": 350, "coal": 1200, "food": 8500, "rubber": 40, "aluminum": 60, "uranium": 15},
         "stockpile": {"oil": 800, "steel": 600, "coal": 2000, "food": 11000, "rubber": 80, "aluminum": 100, "uranium": 25},
         "production": {"tanks": 2, "planes": 5, "ships": 0, "guns": 1800, "ammo": 6000},
@@ -253,6 +263,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 18000, "steel": 28000, "coal": 180000, "food": 160000, "rubber": 1200, "aluminum": 4500, "uranium": 220},
         "stockpile": {"oil": 32000, "steel": 45000, "coal": 250000, "food": 210000, "rubber": 2200, "aluminum": 7800, "uranium": 380},
         "production": {"tanks": 450, "planes": 380, "ships": 6, "guns": 55000, "ammo": 180000},
@@ -275,6 +286,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 8500, "steel": 12000, "coal": 65000, "food": 95000, "rubber": 2800, "aluminum": 2200, "uranium": 95},
         "stockpile": {"oil": 15000, "steel": 22000, "coal": 95000, "food": 130000, "rubber": 4500, "aluminum": 3800, "uranium": 160},
         "production": {"tanks": 180, "planes": 220, "ships": 5, "guns": 28000, "ammo": 95000},
@@ -297,6 +309,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 1200, "steel": 1800, "coal": 800, "food": 6500, "rubber": 180, "aluminum": 450, "uranium": 35},
         "stockpile": {"oil": 2800, "steel": 3200, "coal": 1500, "food": 9500, "rubber": 350, "aluminum": 800, "uranium": 60},
         "production": {"tanks": 85, "planes": 120, "ships": 2, "guns": 8500, "ammo": 32000},
@@ -319,6 +332,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 145000, "steel": 800, "coal": 300, "food": 4800, "rubber": 50, "aluminum": 120, "uranium": 10},
         "stockpile": {"oil": 280000, "steel": 1500, "coal": 600, "food": 7500, "rubber": 100, "aluminum": 250, "uranium": 20},
         "production": {"tanks": 15, "planes": 25, "ships": 1, "guns": 2200, "ammo": 9000},
@@ -341,6 +355,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "last_factory_collect": 0,
         "resources": {"oil": 6500, "steel": 8500, "coal": 48000, "food": 38000, "rubber": 400, "aluminum": 1800, "uranium": 280},
         "stockpile": {"oil": 12000, "steel": 15000, "coal": 75000, "food": 52000, "rubber": 800, "aluminum": 3200, "uranium": 450},
         "production": {"tanks": 95, "planes": 280, "ships": 6, "guns": 14000, "ammo": 48000},
@@ -596,10 +611,7 @@ async def build_factory(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if not context.args:
         text = "🏭 کارخانه‌های قابل ساخت:\n\n"
-        for k, v in FACTORY_COST.items():
-            text += f"• `{k}` → {v:,} War Credit\n"
-        text += "\nمثال: /build_factory tank"
-        await update.message.reply_text(text, parse_mode="Markdown")
+        await update.message.reply_text(text)
         return
 
     ftype = context.args[0].lower().strip()
@@ -728,6 +740,81 @@ async def declare_war(update: Update, context: ContextTypes.DEFAULT_TYPE):
         COUNTRIES[target]["at_war_with"].append(country)
     update_and_save()
     await update.message.reply_text(f"⚔️ جنگ بین {COUNTRIES[country]['name']} و {COUNTRIES[target]['name']} اعلام شد!")
+
+async def getfactoryitems(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    uid = str(update.effective_user.id)
+    country = get_user_country(uid)
+
+    if not country:
+        await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+        return
+    c = COUNTRIES[country]
+
+    if c.get("occupied_by"):
+        await update.message.reply_text("کشور شما اشغال شده و نمیتونی تولیدات کارخونه هاتو جمع کنی")
+        return
+    factories = c.get("factories", [])
+    if not factories:
+        await update.message.reply_text("کشور شما هیچ کارخانه ای نداره\nبا دستور /build_factory یدونه بساز")
+        return
+    now = time.time()
+    last_factory_collect = c.get("last_factory_collect", 0)
+    cooldown = 15 * 60
+    remaining = int(cooldown - (now - last_factory_collect))
+    if remaining > 0:
+        min = remaining // 60
+        sec = remaining % 60
+        await update.message.reply_text(
+            f"کارخونه هات تولید نکردن"
+            f"باید {min} دقیقه و {sec} ثانیه صبر کنی"
+        )
+        return
+    factory_count = {}
+    for f in factories:
+        ftype = f["type"]
+        factory_count[ftype] = factory_count.get(ftype, 0) + 1
+
+        gain_equ = {"tanks": 0, "fighters": 0, "ships": 0}
+        gain_res = {"steel": 0, "oil":0, "uranium":0}
+        text_lines = []
+
+        for ftype, count in factory_count.items():
+            if ftype == "tank":
+                amount = count * 20
+                gain_equ["tanks"] += amount
+                text_lines.append(f"+ {amount} tank")
+            elif ftype == "aircraft":
+                amount = count * 20
+                gain_equ["fighters"] += amount
+                text_lines.append(f"+ {amount} aircraft")
+            elif ftype == "shipyard":
+                amount = count * 20
+                gain_equ["ships"] += amount
+                text_lines.append(f"+ {amount} ships")
+            elif ftype == "steel":
+                amount = count * 20
+                gain_res["steel"] += amount
+                text_lines.append(f"+ {amount} steel")
+            elif ftype == "oil":
+                amount = count * 20
+                gain_res["oil"] += amount
+                text_lines.append(f"+ {amount} oil")
+            elif ftype == "uranium":
+                amount = count * 20
+                gain_res["uranium"] += amount
+                text_lines.append(f"+ {amount} uranium")
+        for item, amount in gain_equ.items():
+            if amount > 0:
+                c["equipment"][item] = c["equipment"].get(item, 0) + amount
+        for res, amount in gain_res.items():
+            if amount > 0:
+                c["stockpile"][res] = c["stockpile"].get(res, 0) + amount
+        c["last_factory_collect"] = now
+        update_and_save()
+        text = f"تولیدات کارخانه های {c['name']} جمع آوری شد\n\n"
+        text += f"".join(text_lines)
+        text += f"میتونی 30 دقیقه دیکه دوباره جمع کنی"
+        await update.message.reply_text(text)
 
 async def peace(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
@@ -956,7 +1043,7 @@ def main():
     app.add_handler(CommandHandler("sanction", sanction))
     app.add_handler(CommandHandler("blockade", blockade))
     app.add_handler(CommandHandler("factories", factories))
-    app.add_handler(CommandHandler("factorys", factories))  # برای املای اشتباه هم کار کند
+    app.add_handler(CommandHandler("factory_collect", getfactoryitems))  # برای املای اشتباه هم کار کند
 
     print("ربات جنگ جهانی با موفقیت اجرا شد...")
     app.run_polling()
