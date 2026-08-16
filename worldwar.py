@@ -1006,6 +1006,25 @@ async def occupy(update: Update, context: ContextTypes.DEFAULT_TYPE):
     update_and_save()
     await update.message.reply_text(f"🏴 کشور {COUNTRIES[target]['name']} توسط شما تصرف شد!")
 
+async def convertmoney(update: Update, context: ContextTypes.DEFAULT_TYPE):
+  uid = str(update.effective_user.id)
+  country = get_user_country(uid)
+
+  if not country:
+    await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+    return
+  if not context.args:
+    await update.message.reply_text("مثال: /sanction japan")
+    return
+  value = context.args[0].lower()
+  if COUNTRIES[country]["money"] < value:
+    await update.message.reply_text("پول کافی نداری")
+    return
+  COUNTRIES[country]["money"] -= value
+  valuee = value / 100
+  COUNTRIES[country]["war_credit"] += valuee
+  await update.message.reply_text(f"تو مقدار {value} پول رو به {valuee} war_credit کردی")
+  
 async def sanction(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
     country = get_user_country(uid)
@@ -1087,6 +1106,7 @@ def main():
     app.add_handler(CommandHandler("buy", buy))
     app.add_handler(CommandHandler("sell", sell))
     app.add_handler(CommandHandler("build_factory", build_factory))
+    app.add_handler(CommandHandler("convert", convertmoney))
     app.add_handler(CommandHandler("spy", spy))
     app.add_handler(CommandHandler("lend_lease", lend_lease))
     app.add_handler(CommandHandler("declare_war", declare_war))
