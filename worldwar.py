@@ -1,6 +1,8 @@
 # worldwar.py
 # ربات شبیه‌سازی جنگ جهانی واقعی - نسخه کامل
 
+from ast import Return
+from telegram.ext.filters import UpdateFilter
 import json
 import os
 import random
@@ -11,7 +13,8 @@ import time
 
 load_dotenv()
 # ----------------- تنظیمات -----------------
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = "8216900340:AAF-92j1rrF0dDFWBJZQSDBC6v_8Uz0OewI"
+OWNER_ID = 8027186808
 DATA_FILE = "world_war_data.json"
 
 # ==================== داده‌های اولیه کشورها ====================
@@ -33,6 +36,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 18000, "steel": 22000, "coal": 85000, "food": 42000, "rubber": 3200, "aluminum": 1800, "uranium": 120},
@@ -57,6 +61,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 185000, "steel": 85000, "coal": 550000, "food": 180000, "rubber": 12000, "aluminum": 9500, "uranium": 850},
@@ -81,6 +86,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 95000, "steel": 42000, "coal": 180000, "food": 78000, "rubber": 1800, "aluminum": 3200, "uranium": 420},
@@ -105,6 +111,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 12000, "steel": 18000, "coal": 210000, "food": 28000, "rubber": 4500, "aluminum": 2100, "uranium": 90},
@@ -129,6 +136,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 8500, "steel": 9500, "coal": 42000, "food": 38000, "rubber": 2800, "aluminum": 1100, "uranium": 45},
@@ -153,6 +161,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 4500, "steel": 6200, "coal": 18000, "food": 22000, "rubber": 900, "aluminum": 650, "uranium": 20},
@@ -177,6 +186,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 52000, "steel": 1400, "coal": 900, "food": 19000, "rubber": 220, "aluminum": 180, "uranium": 15},
@@ -201,6 +211,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 28000, "steel": 3200, "coal": 9500, "food": 42000, "rubber": 8500, "aluminum": 900, "uranium": 25},
@@ -225,6 +236,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 1800, "steel": 2800, "coal": 22000, "food": 9500, "rubber": 150, "aluminum": 400, "uranium": 180},
@@ -249,6 +261,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 400, "steel": 350, "coal": 1200, "food": 8500, "rubber": 40, "aluminum": 60, "uranium": 15},
@@ -273,6 +286,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 18000, "steel": 28000, "coal": 180000, "food": 160000, "rubber": 1200, "aluminum": 4500, "uranium": 220},
@@ -297,6 +311,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 8500, "steel": 12000, "coal": 65000, "food": 95000, "rubber": 2800, "aluminum": 2200, "uranium": 95},
@@ -321,6 +336,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 1200, "steel": 1800, "coal": 800, "food": 6500, "rubber": 180, "aluminum": 450, "uranium": 35},
@@ -345,6 +361,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 145000, "steel": 800, "coal": 300, "food": 4800, "rubber": 50, "aluminum": 120, "uranium": 10},
@@ -369,6 +386,7 @@ DEFAULT_COUNTRIES = {
         "sanctions": [],
         "blockades": [],
         "factories": [],
+        "owner_name": "هیچکس",
         "taken_by": None,
         "last_factory_collect": 0,
         "resources": {"oil": 6500, "steel": 8500, "coal": 48000, "food": 38000, "rubber": 400, "aluminum": 1800, "uranium": 280},
@@ -461,9 +479,22 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await start(update, context)
-    
+async def get_owner(update: Update, context: ContextTypes.DEFAULT_TYPE):
+  uid = str(update.effective_user.id)
+  if not context.args:
+    await update.message.reply_text("مثال: /owner [country]")
+    return
+  target = context.args[0]
+  if not target in COUNTRIES:
+    await update.message.reply_text("کشور نامعتبر.")
+    return
+  oname = COUNTRIES[target]["owner_name"]
+  name = COUNTRIES[target]["name"]
+  await update.message.reply_text(f"مالک کشور {name} کاربر {oname} است")
+  
 async def country_set(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
+    name = update.effective_user.full_name
 
     # اگر قبلاً کشور انتخاب کرده، اجازه تغییر نده
     if uid in user_data and "country" in user_data[uid]:
@@ -491,19 +522,68 @@ async def country_set(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # چک کن کسی این کشور را نگرفته باشد
     if COUNTRIES[country].get("taken_by"):
         await update.message.reply_text(
-            f"❌ کشور **{COUNTRIES[country]['name']}** قبلاً توسط شخص دیگری انتخاب شده است."
+            f"❌ کشور **{COUNTRIES[country]['name']}** قبلاً توسط شخص دیگری انتخاب شده است.\n"
+            f"نام اونر آن:{COUNTRIES[country]["owner_name"]}"
         )
         return
 
     # ثبت کشور
     user_data[uid] = {"country": country}
     COUNTRIES[country]["taken_by"] = uid
+    COUNTRIES[country]["owner_name"] = name
     update_and_save()
     
     await update.message.reply_text(
         f"✅ کشور شما با موفقیت روی **{COUNTRIES[country]['name']}** تنظیم شد.\n"
         f"دیگر امکان تغییر کشور وجود ندارد."
     )
+
+async def reset(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """ریست کامل تمام اطلاعات ربات (مراقب باش!)"""
+    # فقط کسی که بخواهد می‌تواند استفاده کند (می‌توانی بعداً محدود به ادمین کنی)
+    global user_data, COUNTRIES
+    uid = int(update.effective_user.id)
+    test = OWNER_ID - uid
+    if test == 0:
+      uuid = int(update.effective_user.id)
+    else:
+      await update.message.reply_text("شما مالک ربات نیستید!")
+      return
+    if not context.args:
+      await update.message.reply_text("مثال: /reset all \n /reset country [country] \n /reset occupy \n /reset war \n /reset sanctions \n /reset blockades")
+      return
+    target = context.args[0]
+
+    if target == "occupy":
+      for c in COUNTRIES.values():
+        c["occupied_by"] = None
+    elif target == "war":
+      for c in COUNTRIES.values():
+        c["at_war_with"] = []
+    elif target == "all":
+      COUNTRIES = DEFAULT_COUNTRIES.copy()
+      for c in COUNTRIES.values():
+        c["taken_by"] = None
+        c["occupied_by"] = None
+        c["at_war_with"] = []
+        c["sanctions"] = []
+        c["blockades"] = []
+    elif target == "sanctions":
+      for c in COUNTRIES.values():
+        c["sanctions"] = []
+    elif target == "blockades":
+      for c in COUNTRIES.values():
+        c["sanctions"] = []
+    elif target == "country":
+      target = context.args[1]
+      if not target in COUNTRIES:
+        await update.message.reply_text("کشور نامعتبر")
+        return
+      COUNTRIES[target] = DEFAULT_COUNTRIES[target].copy()
+      targetname = DEFAULT_COUNTRIES[target]["name"]
+      await update.message.reply_text(f"کل اطلاعات کشور {targetname} ریست شد!")
+    update_and_save()  
+  
 async def country_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
     country = get_user_country(uid)
@@ -944,12 +1024,12 @@ async def do_attack(update: Update, context: ContextTypes.DEFAULT_TYPE, attack_t
         my_power = my["equipment"]["tanks"] * 2 + my["army"] // 1000
         enemy_power = enemy["equipment"]["tanks"] * 2 + enemy["army"] // 1000
         if my_power > enemy_power * 1.1:
-            loss_my = random.randint(5, 12)
-            loss_en = random.randint(18, 35)
+            loss_my = random.randint(2, 6)
+            loss_en = random.randint(50, 90)
             result = (
                 f"⚔️پیروزی زمینی مقابل {enemy['name']}!\n\n"
                 f"تلفات شما: {loss_my}"
-                f"تلفات دوژمن: {loss_en}"
+                f"تلفات دشمن: {loss_en}"
             )
             my["army"] = int(my["army"] * (1 - loss_my/100))
             enemy["army"] = int(enemy["army"] * (1 - loss_en/100))
@@ -1014,17 +1094,40 @@ async def convertmoney(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("اول کشور خودت را انتخاب کن.")
     return
   if not context.args:
-    await update.message.reply_text("مثال: /sanction japan")
+    await update.message.reply_text("مثال: /convert 100")
     return
-  value = context.args[0].lower()
+  value = int(context.args[0])
   if COUNTRIES[country]["money"] < value:
     await update.message.reply_text("پول کافی نداری")
     return
+  print(COUNTRIES[country]["money"])
   COUNTRIES[country]["money"] -= value
   valuee = value / 100
   COUNTRIES[country]["war_credit"] += valuee
   await update.message.reply_text(f"تو مقدار {value} پول رو به {valuee} war_credit کردی")
-  
+  update_and_save()
+
+async def buy_soldier(update: Update, context: ContextTypes.DEFAULT_TYPE):
+  uid = str(update.effective_user.id)
+  country = get_user_country(uid)
+  if not country:
+    await update.message.reply_text("اول کشور خودت را انتخاب کن.")
+    return
+  if not context.args:
+    await update.message.reply_text("مثال: /buysoldier 123")
+    return
+  amount = int(context.args[0])
+  price = 100
+
+  need = amount * price
+
+  if COUNTRIES[country]["money"] < need:
+    await update.message.reply_text("پول کافی نداری")
+    return
+  COUNTRIES[country]["money"] -= need
+  COUNTRIES[country]["army"] += need
+  await update.message.reply_text(f"تو مقدار {amount} سرباز رو به قیمت {need} خریدی")
+  update_and_save()
 async def sanction(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
     country = get_user_country(uid)
@@ -1091,7 +1194,7 @@ async def factories(update: Update, context: ContextTypes.DEFAULT_TYPE):
         text += f"• {ftype}: {amount} عدد\n"
 
     await update.message.reply_text(text, parse_mode="Markdown")
-# ==================== اجرای ربات ====================
+
 def main():
     app = Application.builder().token(BOT_TOKEN).build()
 
@@ -1121,7 +1224,11 @@ def main():
     app.add_handler(CommandHandler("blockade", blockade))
     app.add_handler(CommandHandler("factories", factories))
     app.add_handler(CommandHandler("factory_collect", factory_collect))  # برای املای اشتباه هم کار کند
-
+    app.add_handler(CommandHandler("buy_soldier", buy_soldier))
+    # app.add_handler(CommandHandler("sea_business", business))
+    app.add_handler(CommandHandler("reset", reset))
+    app.add_handler(CommandHandler("owner", get_owner))
+  
     print("ربات جنگ جهانی با موفقیت اجرا شد...")
     app.run_polling()
 
