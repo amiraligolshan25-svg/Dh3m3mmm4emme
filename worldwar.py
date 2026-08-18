@@ -6,7 +6,7 @@ from telegram.ext.filters import UpdateFilter
 import json
 import os
 import random
-from telegram import Update
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, ContextTypes
 from dotenv import load_dotenv
 import time
@@ -475,7 +475,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "/blockade [کشور]\n"
         "/help"
     )
-    await update.message.reply_text(text)
+    await update.message.reply_text(text, parse_mode="Markdown")
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await start(update, context)
@@ -961,6 +961,31 @@ async def factory_collect(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text(text, parse_mode="Markdown")
 
+async def stockpile(update: Update, context: ContextTypes.DEFAULT_TYPE):
+  uid = str(update.effective_user.id)
+  country = get_user_country(uid)
+  if not country:
+    await update.message.reply_text("اول کشور خود را انتخاب کنید")
+    return
+  name = COUNTRIES[country]['name']
+  text = f"🪎ذخایر کشور {name}"
+  keyboard = [
+    [
+      InlineKeyboardButton(f"نفت: {COUNTRIES[country]['stockpile']['oil']}"),
+      InlineKeyboardButton(f"فولاد: {COUNTRIES[country]['stockpile']['steel']}")
+    ],
+    [
+      InlineKeyboardButton(f"زغال: {COUNTRIES[country]['stockpile']['coal']}"),
+      InlineKeyboardButton(f"غذا: {COUNTRIES[country]['stockpile']['food']}")
+    ],
+    [
+      InlineKeyboardButton(f"اورانیوم: {COUNTRIES[country]['stockpile']['uranium']}"),
+      InlineKeyboardButton(f"لاستیک: {COUNTRIES[country]['stockpile']['rubber']}")
+    ]
+  ]
+  mark_up = InlineKeyboardMarkup(keyboard)
+  await update.message.reply_text(text, reply_markup= mark_up)
+  
 async def peace(update: Update, context: ContextTypes.DEFAULT_TYPE):
     uid = str(update.effective_user.id)
     country = get_user_country(uid)
