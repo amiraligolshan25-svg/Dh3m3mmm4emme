@@ -1,5 +1,5 @@
-# worldwar.py
 # ربات شبیه‌سازی جنگ جهانی واقعی - نسخه کامل
+# worldwar.py
 
 from ast import Return
 from telegram.ext.filters import UpdateFilter
@@ -479,8 +479,15 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await start(update, context)
+  
 async def get_owner(update: Update, context: ContextTypes.DEFAULT_TYPE):
   uid = str(update.effective_user.id)
+  uuid = update.effective_user.id 
+  test = uuid - OWNER_ID
+  if test == 0:
+    uuuid = update.effective_user.id
+  else :
+    return
   if not context.args:
     await update.message.reply_text("مثال: /owner [country]")
     return
@@ -520,10 +527,11 @@ async def country_set(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     # چک کن کسی این کشور را نگرفته باشد
+    
     if COUNTRIES[country].get("taken_by"):
         await update.message.reply_text(
             f"❌ کشور **{COUNTRIES[country]['name']}** قبلاً توسط شخص دیگری انتخاب شده است.\n"
-            f"نام اونر آن:{COUNTRIES[country]["owner_name"]}"
+            f"نام مالک آن:{COUNTRIES[country]['owner_name']}"
         )
         return
 
